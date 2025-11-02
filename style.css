@@ -1,133 +1,85 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
-}
-
 body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
     background:black;
-    width:100vw;
-    height:100vh;
-    overflow:hidden;
-}
-
-/* ===== PANTALLAS ===== */
-.pantalla{
-    position:absolute;
-    top:0; left:0;
-    width:100vw;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    opacity:0;
-    pointer-events:none;
-    transition:0.5s;
-}
-.pantalla.visible{
-    opacity:1;
-    pointer-events:auto;
-}
-
-/* ===== VIDEO DE FONDO ===== */
-#video-fondo{
-    position:absolute;
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    background:black; /* Rellena bordes sin deformar */
-}
-
-/* Capa oscura encima del video */
-.overlay-negro{
-    position:absolute;
-    width:100%;
-    height:100%;
-    background:rgba(20, 20, 20, 0.6);
-}
-
-/* ===== BOTONES ===== */
-.contenedor-botones{
-    z-index:10;
+    color:white;
     text-align:center;
 }
 
-.titulo{
-    font-size:40px;
-    color:#F7A0D3;
-    margin-bottom:20px;
+.pantalla{
+    display:none;
+    width:100vw;
+    height:100vh;
+    justify-content:center;
+    align-items:center;
 }
 
+.pantalla.visible{
+    display:flex;
+}
+
+.titulo{
+    font-size:32px;
+    margin-bottom:20px;
+    color:#ff9ece;
+}
+
+/* Botones principales */
 .btn{
-    padding:15px 35px;
+    padding:15px 30px;
     margin:10px;
-    background:#ffffff22;
-    border:2px solid #F37BB8;
-    color:white;
-    font-size:18px;
+    background:#ff9ece;
+    border:none;
     border-radius:10px;
-    backdrop-filter:blur(3px);
+    color:black;
+    font-size:18px;
     cursor:pointer;
 }
-.btn:hover{
-    background:#F7A0D3;
+
+.btn-peq{
+    padding:5px 12px;
+    background:#ff9ece;
+    border:none;
     color:black;
+    margin-top:10px;
+    border-radius:6px;
+    cursor:pointer;
 }
 
-/* ===== BOTONES JUEGO ===== */
-.top-controls{
-    position:absolute;
-    top:15px;
-    left:50%;
-    transform:translateX(-50%);
-    display:flex;
-    gap:10px;
-    z-index:10;
-}
+/* Botones en el juego */
 .btn2{
     padding:10px 20px;
-    font-size:17px;
-    background:#F7A0D3;
+    background:#ff9ece;
     border:none;
     border-radius:8px;
     cursor:pointer;
+    color:black;
+    margin:3px;
 }
 
-/* ===== TABLERO ===== */
+/* Tablero responsive */
 #tablero{
     display:grid;
-    width:70vmin;
-    height:70vmin;
+    margin:auto;
+    width:80vmin;
+    height:80vmin;
     max-width:95vw;
     max-height:95vw;
-    background:#ffddf0;
+    background:#ffe5f4;
     border-radius:10px;
+    box-shadow:0 0 10px #ff9ece;
     overflow:hidden;
-    box-shadow:0 0 15px #ff9edb;
 }
 
-/* Piezas */
+/* Cada pieza */
 .pieza{
     background-size:cover;
     background-position:center;
-    border:1px solid #ffb6df;
     cursor:pointer;
+    border:1px solid #ffb3d9;
 }
 
-/* ÚNICA casilla vacía */
+/* Única pieza vacía */
 .vacia{
-    background:#ffd0f5 !important;
-}
-
-/* Mute button */
-.mute-btn{
-    position:absolute;
-    bottom:15px;
-    right:15px;
-    padding:10px;
-    border:none;
-    border-radius:50%;
-    background:#F7A0D3;
-    font-size:20px;
+    background:#ffd1ec !important;
 }
