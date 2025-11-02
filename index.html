@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rompecabezas del Amor ❤️</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="pantalla-inicio">
+    <h1>💖 Nuestro Amor 💖</h1>
+    <p>Selecciona la dificultad y comienza tu regalo</p>
+
+    <select id="dificultad">
+        <option value="3">Fácil (3x3)</option>
+        <option value="4">Medio (4x4)</option>
+        <option value="5">Difícil (5x5)</option>
+    </select>
+
+    <button id="btnIniciar">Comenzar</button>
+</div>
+
+<div id="contenedor" class="oculto">
+    <canvas id="puzzleCanvas" width="500" height="500"></canvas>
+    <div class="controls">
+        <button id="btnMezclar">Mezclar</button>
+        <button id="btnSiguiente">Siguiente imagen</button>
+    </div>
+    <div id="mensaje"></div>
+</div>
+
+<!-- Música -->
+<audio id="musica" src="mix-romantico-1h.mp3" preload="auto"></audio>
+
+<script src="script.js"></script>
+</body>
+</html>
