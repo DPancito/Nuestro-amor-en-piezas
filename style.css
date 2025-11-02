@@ -1,89 +1,28 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: sans-serif;
-}
-
-body {
-    background: #000;
-    color: white;
-    overflow: hidden;
-}
-
-/* 🔥 VIDEO RESPONSIVE */
-#pantalla-inicio {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#video-portada {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    background: #000;
-}
-
-/* 🔥 MENÚ SUPERPUESTO */
-#menu-inicio {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-}
-
-.titulo-portada {
-    font-size: 9vw;
-    font-weight: bold;
-    color: #ffb7d5;
-    text-shadow: 0 0 12px #ff4fa3;
-    margin-bottom: 25px;
-}
-
-.btn-romantico {
-    background: #ff7ebc;
-    border: none;
-    padding: 15px 35px;
-    font-size: 20px;
-    border-radius: 30px;
-    color: #fff;
-    cursor: pointer;
-    box-shadow: 0 0 12px #ff4fa3;
-    margin: 10px;
-}
-.btn-romantico:hover {
-    background: #ff4fa3;
-}
-
-/* 🔥 JUEGO */
 #pantalla-juego {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    background: #000;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
 }
 
-.oculto { display: none; }
-
 #puzzle {
-    background: #121212;
-    max-width: 90vw;
-    max-height: 90vh;
-    border: 2px solid #ff7ebc;
+    border: 3px solid #ff7ebc;
+    background: #000;
+    display: block;
+    margin: 0 auto;
+    touch-action: manipulation;
 }
 
 #controles {
-    margin-top: 12px;
+    margin-top: 15px;
+    text-align: center;
 }
 
+.btn-romantico {
+    font-size: 22px;
+    padding: 12px 30px;
+    margin: 8px;
+}
