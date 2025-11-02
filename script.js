@@ -9,8 +9,13 @@ fetch('images.json')
       console.log("Imágenes cargadas:", imagenes.length);
   });
 
-// --- Mostrar imagen centrada y escalada ---
-function mostrarImagen(indice) {
+// --- Mostrar imagen aleatoria ---
+function mostrarImagen(indice = null) {
+    if (indice === null) {
+        indice = Math.floor(Math.random() * imagenes.length);
+    }
+    indiceActual = indice;
+
     const img = new Image();
     img.src = `images/${imagenes[indice]}`;
     img.onload = () => {
@@ -33,13 +38,13 @@ function iniciarJuego() {
     document.getElementById("menu").style.display = "none";
     document.getElementById("juego").style.display = "block";
 
-    // Reproducir música al interactuar
+    // Reproducir música solo tras interacción del usuario
     const audio = document.getElementById("musica");
     audio.currentTime = Math.random() * Math.max(1, audio.duration || 3600 - 10);
     audio.volume = 0;
     audio.play().then(() => fadeIn(audio)).catch(() => console.log("La música necesita interacción del usuario"));
 
-    mostrarImagen(indiceActual);
+    mostrarImagen();
 }
 
 // --- Fade-in suave ---
@@ -50,15 +55,13 @@ function fadeIn(audio, target = 0.5, step = 0.02, intervalMs = 150) {
     }, intervalMs);
 }
 
-// --- Pasar a siguiente imagen ---
+// --- Siguiente imagen ---
 function siguienteImagen() {
-    indiceActual = (indiceActual + 1) % imagenes.length;
-    mostrarImagen(indiceActual);
+    mostrarImagen();
 }
 
-// --- Mezclar placeholder ---
+// --- Mezclar ---
 function mezclar() {
-    // Aquí puedes agregar la lógica del puzzle
     document.getElementById("mensaje").innerText = "¡Puzzle mezclado!";
 }
 
