@@ -1,39 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nuestro Amor en Piezas</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puzzle SQM</title>
+<link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
-    <!-- 🔹 Pantalla inicial con video -->
-    <div id="pantalla-inicio">
-        <video id="video-portada" autoplay muted loop playsinline>
-            <source src="Portada.mp4" type="video/mp4">
-        </video>
+<!-- ✅ Pantalla de INICIO -->
+<div id="pantalla-inicio" class="pantalla visible">
+    <video id="video-fondo" autoplay muted loop playsinline>
+        <source src="Portada.mp4" type="video/mp4">
+    </video>
 
-        <div id="menu-inicio">
-            <h1 class="titulo-portada">Nuestro Amor en Piezas</h1>
-            <button class="btn-romantico" onclick="empezarJuego()">Comenzar</button>
-        </div>
+    <div class="overlay-negro"></div>
+
+    <div class="contenedor-botones">
+        <h1 class="titulo">ROMPECABEZAS</h1>
+        <button class="btn" onclick="iniciarJuego()">Comenzar</button>
+        <button class="btn" onclick="seleccionarNivel()">Nivel</button>
     </div>
 
-    <!-- 🔹 Pantalla del puzzle -->
-    <div id="pantalla-juego" class="oculto">
-        <canvas id="puzzle"></canvas>
+    <audio id="musica-inicio" src="music.mp3" loop autoplay></audio>
+    <button id="mute-btn" class="mute-btn" onclick="toggleMute()">🔊</button>
+</div>
 
-        <div id="controles">
-            <button class="btn-romantico" onclick="mezclarPiezas()">Mezclar</button>
-            <button class="btn-romantico" onclick="nuevaImagen()">Otra Imagen</button>
-        </div>
+
+
+<!-- ✅ Pantalla de JUEGO -->
+<div id="pantalla-juego" class="pantalla">
+    <div class="top-controls">
+        <button class="btn2" onclick="mezclar()">Mezclar</button>
+        <button class="btn2" onclick="cargarOtraImagen()">Otra imagen</button>
+        <button class="btn2" onclick="volverInicio()">Volver</button>
     </div>
 
-    <audio id="musica" src="musica/romantico.mp3" preload="auto"></audio>
+    <div id="tablero"></div>
 
-    <script src="script.js"></script>
+    <audio id="musica-juego" src="music.mp3" loop></audio>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
-
