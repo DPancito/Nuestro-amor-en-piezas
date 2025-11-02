@@ -1,137 +1,89 @@
-/* Reset y cuerpo */
-body {
+* {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #1c1c1c; /* negro de fondo general */
-    overflow-x: hidden;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
 }
 
-/* MENU PRINCIPAL CON VIDEO */
-#menu {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    background-color: #ffb6c1; /* rosa suave para espacios sobrantes */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+body {
+    background: #000;
+    color: white;
     overflow: hidden;
 }
 
-#videoPortada {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    max-width: 100%;
-    max-height: 100%;
-    transform: translate(-50%, -50%);
-    object-fit: contain; /* ajusta al ancho/largo sin deformar */
-    background-color: #ffb6c1; /* relleno de rosa suave */
-    z-index: 1;
-}
-
-/* SUPERPOSICIÓN DE BOTONES Y TEXTO */
-#menu-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    color: #fff;
-    text-align: center;
-    backdrop-filter: blur(5px);
-    padding: 20px 30px;
-    border-radius: 15px;
-    background: rgba(255, 182, 193, 0.2);
-}
-
-#menu-overlay h1 {
-    font-size: 2em;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-    margin: 0;
-}
-
-/* SELECTOR Y BOTONES */
-#menu-overlay select,
-#menu-overlay button {
-    font-size: 16px;
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    outline: none;
-}
-
-#menu-overlay select {
-    background: rgba(255, 192, 203, 0.7);
-    color: #003B7C;
-}
-
-#menu-overlay select:hover {
-    background: rgba(255, 182, 193, 0.9);
-}
-
-#menu-overlay button {
-    background: linear-gradient(135deg, #ffb6c1, #ff69b4);
-    color: #fff;
-    font-weight: bold;
-    box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
-}
-
-#menu-overlay button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0px 6px 12px rgba(0,0,0,0.4);
-}
-
-/* ZONA DEL JUEGO */
-#juego {
+/* 🔥 VIDEO RESPONSIVE */
+#pantalla-inicio {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #1c1c1c; /* negro */
+    background: #000;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: center;
 }
 
-#puzzleCanvas {
-    display: block;
-    border: 2px solid #003B7C;
-    background-color: #ffb6c1; /* rosa suave detrás de la imagen */
-    touch-action: none;
+#video-portada {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
 }
 
-.controls {
+/* 🔥 MENÚ SUPERPUESTO */
+#menu-inicio {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.titulo-portada {
+    font-size: 9vw;
+    font-weight: bold;
+    color: #ffb7d5;
+    text-shadow: 0 0 12px #ff4fa3;
+    margin-bottom: 25px;
+}
+
+.btn-romantico {
+    background: #ff7ebc;
+    border: none;
+    padding: 15px 35px;
+    font-size: 20px;
+    border-radius: 30px;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 12px #ff4fa3;
+    margin: 10px;
+}
+.btn-romantico:hover {
+    background: #ff4fa3;
+}
+
+/* 🔥 JUEGO */
+#pantalla-juego {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 10px;
+    align-items: center;
+    flex-direction: column;
 }
 
-.controls button {
-    padding: 8px 15px;
-    border-radius: 8px;
-    border: none;
-    background: #ffb6c1;
-    color: #003B7C;
-    font-weight: bold;
-    cursor: pointer;
+.oculto { display: none; }
+
+#puzzle {
+    background: #121212;
+    max-width: 90vw;
+    max-height: 90vh;
+    border: 2px solid #ff7ebc;
 }
 
-.controls button:hover {
-    background: #ff69b4;
-    color: #fff;
+#controles {
+    margin-top: 12px;
 }
 
-/* PARA IMÁGENES DENTRO DEL JUEGO */
-img.puzzle-img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain; /* ajusta proporcionalmente */
-    background-color: #ffb6c1;
-}
