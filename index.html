@@ -8,22 +8,21 @@
 </head>
 <body>
 
-<!-- MÚSICA -->
-<audio id="musica" src="musica/romantico.mp3" loop></audio>
-
-<!-- MENÚ PRINCIPAL -->
+<!-- VIDEO DE PORTADA -->
 <div id="menu">
-    <h1>Nuestro amor entre piezas ❤️</h1>
-    <div id="collage-container">
-        <div id="collage"></div>
-        <div id="menu-overlay">
-            <select id="dificultad">
-                <option value="3">Fácil (3x3)</option>
-                <option value="4">Medio (4x4)</option>
-                <option value="5">Difícil (5x5)</option>
-            </select>
-            <button onclick="iniciarJuego()">Comenzar</button>
-        </div>
+    <video id="videoPortada" autoplay muted loop playsinline>
+        <source src="Portada.mp4" type="video/mp4">
+        Tu navegador no soporta videos HTML5
+    </video>
+
+    <div id="menu-overlay">
+        <h1>Nuestro amor entre piezas ❤️</h1>
+        <select id="dificultad">
+            <option value="3">Fácil (3x3)</option>
+            <option value="4">Medio (4x4)</option>
+            <option value="5">Difícil (5x5)</option>
+        </select>
+        <button onclick="iniciarJuego()">Comenzar</button>
     </div>
 </div>
 
