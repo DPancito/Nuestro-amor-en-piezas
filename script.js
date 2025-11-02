@@ -1,17 +1,19 @@
+// --- VARIABLES ---
 let imagenes = [];
 let indiceActual = 0;
 let filas = 3;
 let columnas = 3;
 let canvas, ctx;
 let piezas = [];
-let piezaVacia; // posición de la pieza vacía para puzzle deslizante
+let piezaVacia;
+let imgActual = new Image();
 
-// --- Cargar imágenes ---
+// --- CARGAR IMÁGENES ---
 fetch('images.json')
   .then(res => res.json())
   .then(data => imagenes = data);
 
-// --- Inicializar canvas ---
+// --- AJUSTAR CANVAS ---
 function ajustarCanvas() {
     canvas = document.getElementById("puzzleCanvas");
     ctx = canvas.getContext("2d");
@@ -20,63 +22,49 @@ function ajustarCanvas() {
     canvas.height = tamaño;
 }
 
-// --- Mostrar imagen y crear piezas ---
+// --- MOSTRAR IMAGEN ---
 function mostrarImagen(indice = null) {
     if (indice === null) indice = Math.floor(Math.random() * imagenes.length);
     indiceActual = indice;
-
-    const img = new Image();
-    img.src = `images/${imagenes[indice]}`;
-    img.onload = () => {
+    imgActual.src = `images/${imagenes[indice]}`;
+    imgActual.onload = () => {
         ajustarCanvas();
         piezas = [];
-
         const piezaAncho = canvas.width / columnas;
         const piezaAlto = canvas.height / filas;
 
-        // Crear piezas con posiciones originales
         for (let i = 0; i < filas; i++) {
             for (let j = 0; j < columnas; j++) {
                 piezas.push({
-                    sx: j * (img.width / columnas),
-                    sy: i * (img.height / filas),
-                    sw: img.width / columnas,
-                    sh: img.height / filas,
+                    sx: j * (imgActual.width / columnas),
+                    sy: i * (imgActual.height / filas),
+                    sw: imgActual.width / columnas,
+                    sh: imgActual.height / filas,
                     x: j,
                     y: i,
-                    dx: j * piezaAncho,
-                    dy: i * piezaAlto
+                    empty: (i === filas-1 && j === columnas-1)
                 });
+                if(i === filas-1 && j === columnas-1) piezaVacia = {x:j, y:i};
             }
         }
-
-        // Última pieza vacía
-        piezaVacia = {x: columnas-1, y: filas-1};
-        piezas[piezas.length-1].empty = true;
-
         mezclarPiezas();
-        dibujarPiezas(img);
-        canvas.addEventListener('click', e => manejarClick(e, img));
-        canvas.addEventListener('touchstart', e => {
-            e.preventDefault();
-            manejarClick(e.touches[0], img);
-        });
-    };
+        dibujarPiezas();
+    }
 }
 
-// --- Dibujar piezas ---
-function dibujarPiezas(img) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+// --- DIBUJAR PIEZAS ---
+function dibujarPiezas() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const ancho = canvas.width / columnas;
+    const alto = canvas.height / filas;
     piezas.forEach(p => {
-        if (!p.empty) {
-            const ancho = canvas.width / columnas;
-            const alto = canvas.height / filas;
-            ctx.drawImage(img, p.sx, p.sy, p.sw, p.sh, p.x*ancho, p.y*alto, ancho, alto);
+        if(!p.empty) {
+            ctx.drawImage(imgActual, p.sx, p.sy, p.sw, p.sh, p.x*ancho, p.y*alto, ancho, alto);
         }
     });
 }
 
-// --- Iniciar juego ---
+// --- INICIAR JUEGO ---
 function iniciarJuego() {
     document.getElementById("menu").style.display = "none";
     document.getElementById("juego").style.display = "block";
@@ -91,77 +79,73 @@ function iniciarJuego() {
     mostrarImagen();
 }
 
-// --- Fade-in ---
-function fadeIn(audio, target=0.5, step=0.02, intervalMs=150) {
-    const iv = setInterval(() => {
-        audio.volume = Math.min(audio.volume + step, target);
-        if (audio.volume >= target) clearInterval(iv);
-    }, intervalMs);
+// --- FADE-IN ---
+function fadeIn(audio,target=0.5,step=0.02,intervalMs=150){
+    const iv = setInterval(()=>{
+        audio.volume = Math.min(audio.volume + step,target);
+        if(audio.volume>=target) clearInterval(iv);
+    },intervalMs);
 }
 
-// --- Mezclar piezas ---
-function mezclarPiezas() {
-    for (let i = 0; i < 1000; i++) { // movimientos aleatorios
-        const adyacentes = piezas.filter(p => esAdyacenteVacia(p));
-        const mover = adyacentes[Math.floor(Math.random() * adyacentes.length)];
-        moverPieza(mover);
+// --- MEZCLAR PIEZAS ---
+function mezclarPiezas(){
+    for(let i=0;i<1000;i++){
+        const adyacentes = piezas.filter(p=> esAdyacenteVacia(p));
+        const mover = adyacentes[Math.floor(Math.random()*adyacentes.length)];
+        moverPieza(mover,false);
     }
+    dibujarPiezas();
 }
 
-// --- Ver si pieza es adyacente a vacía ---
-function esAdyacenteVacia(pieza) {
-    const dx = Math.abs(pieza.x - piezaVacia.x);
-    const dy = Math.abs(pieza.y - piezaVacia.y);
-    return (dx+dy) === 1;
+// --- PIEZA ADYACENTE ---
+function esAdyacenteVacia(p){
+    const dx = Math.abs(p.x - piezaVacia.x);
+    const dy = Math.abs(p.y - piezaVacia.y);
+    return (dx+dy)===1;
 }
 
-// --- Mover pieza ---
-function moverPieza(pieza) {
-    if (esAdyacenteVacia(pieza)) {
+// --- MOVER PIEZA ---
+function moverPieza(pieza, redraw=true){
+    if(esAdyacenteVacia(pieza)){
         const tempX = pieza.x;
         const tempY = pieza.y;
         pieza.x = piezaVacia.x;
         pieza.y = piezaVacia.y;
         piezaVacia.x = tempX;
         piezaVacia.y = tempY;
-        const img = new Image();
-        img.src = `images/${imagenes[indiceActual]}`;
-        img.onload = () => dibujarPiezas(img);
+        if(redraw) dibujarPiezas();
     }
 }
 
-// --- Manejar clic/tap ---
-function manejarClick(e, img) {
+// --- CLIC O TOUCH ---
+function manejarClick(e){
     const rect = canvas.getBoundingClientRect();
-    const xClick = e.clientX - rect.left;
-    const yClick = e.clientY - rect.top;
+    const xClick = (e.clientX||e.touches[0].clientX) - rect.left;
+    const yClick = (e.clientY||e.touches[0].clientY) - rect.top;
     const ancho = canvas.width / columnas;
     const alto = canvas.height / filas;
     const xPieza = Math.floor(xClick / ancho);
     const yPieza = Math.floor(yClick / alto);
 
-    const pieza = piezas.find(p => p.x === xPieza && p.y === yPieza) || null;
-    if (pieza && !pieza.empty && esAdyacenteVacia(pieza)) {
+    const pieza = piezas.find(p=>p.x===xPieza && p.y===yPieza);
+    if(pieza && !pieza.empty){
         moverPieza(pieza);
         verificarPuzzleCompleto();
     }
 }
 
-// --- Verificar si puzzle completado ---
-function verificarPuzzleCompleto() {
-    let completo = piezas.every((p, i) => {
-        const fila = Math.floor(i / columnas);
-        const col = i % columnas;
-        return p.x === col && p.y === fila;
+// --- VERIFICAR COMPLETADO ---
+function verificarPuzzleCompleto(){
+    let completo = piezas.every((p,i)=>{
+        const fila = Math.floor(i/columnas);
+        const col = i%columnas;
+        return p.x===col && p.y===fila;
     });
-    if (completo) {
-        document.getElementById("mensaje").innerText = "¡Felicidades! 💖 Puzzle completado";
-    }
+    if(completo) document.getElementById("mensaje").innerText="¡Felicidades! 💖 Puzzle completado";
 }
 
-// --- Ajustar canvas al cambiar tamaño ---
-window.addEventListener('resize', () => {
-    if (document.getElementById("juego").style.display === "block") {
-        mostrarImagen(indiceActual);
-    }
-});
+// --- EVENTOS ---
+window.addEventListener('resize',()=>{ if(document.getElementById("juego").style.display==="block") mostrarImagen(indiceActual); });
+canvas = document.getElementById("puzzleCanvas");
+canvas.addEventListener('click', manejarClick);
+canvas.addEventListener('touchstart', e=>{ e.preventDefault(); manejarClick(e); });
