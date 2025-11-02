@@ -3,66 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Puzzle SQM</title>
-<link rel="stylesheet" href="styles.css">
+<title>Nuestro amor entre piezas ❤️</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ✅ PANTALLA DE INICIO (ÚNICA visible al principio) -->
+<!-- ✅ Pantalla Principal -->
 <div id="pantalla-inicio" class="pantalla visible">
 
-    <!-- Video de fondo -->
-    <video id="video-fondo" autoplay muted loop playsinline>
-        <source src="Portada.mp4" type="video/mp4">
-    </video>
+    <div class="contenedor">
+        <h1 class="titulo">Nuestro amor entre piezas ❤️</h1>
 
-    <!-- Capa oscura para que texto y botones se vean -->
-    <div class="overlay-negro"></div>
+        <select id="dificultad">
+            <option value="3">Fácil (3x3)</option>
+            <option value="4">Medio (4x4)</option>
+            <option value="5">Difícil (5x5)</option>
+        </select>
 
-    <!-- Botones centrados -->
-    <div class="contenedor-botones">
-        <h1 class="titulo">ROMPECABEZAS</h1>
         <button class="btn" onclick="iniciarJuego()">Comenzar</button>
-        <button class="btn" onclick="mostrarNiveles()">Seleccionar nivel</button>
+
+        <button class="btn-peq" onclick="toggleMute()">🔊 / 🔇 Música</button>
     </div>
 
-    <!-- Música inicio -->
-    <audio id="musica-inicio" src="music.mp3" autoplay loop></audio>
-    <button id="mute-btn" class="mute-btn" onclick="toggleMute()">🔊</button>
-</div>
-
-
-<!-- ✅ PANTALLA DE SELECCIÓN DE NIVEL -->
-<div id="pantalla-niveles" class="pantalla">
-
-    <div class="contenedor-botones">
-        <h2 class="titulo">Elige el nivel</h2>
-        <button class="btn" onclick="setNivel(3)">3 x 3</button>
-        <button class="btn" onclick="setNivel(4)">4 x 4</button>
-        <button class="btn" onclick="setNivel(5)">5 x 5</button>
-        <br>
-        <button class="btn" onclick="volverInicio()">Volver</button>
-    </div>
+    <audio id="musica-inicio" src="music/romantico.mp3" autoplay loop></audio>
 
 </div>
 
-
-<!-- ✅ PANTALLA DEL JUEGO -->
+<!-- ✅ Pantalla del Juego -->
 <div id="pantalla-juego" class="pantalla">
 
-    <div class="top-controls">
-        <button class="btn2" onclick="mezclar()">Mezclar</button>
-        <button class="btn2" onclick="cargarOtraImagen()">Otra imagen</button>
-        <button class="btn2" onclick="volverInicio()">Volver</button>
-    </div>
+    <h2 id="tituloImagen"></h2>
 
     <div id="tablero"></div>
 
-    <!-- Música juego -->
-    <audio id="musica-juego" src="music.mp3" loop></audio>
+    <div class="controls">
+        <button class="btn2" onclick="mezclar()">Mezclar</button>
+        <button class="btn2" onclick="siguienteImagen()">Otra imagen</button>
+        <button class="btn2" onclick="volverInicio()">Volver al inicio</button>
+    </div>
+
+    <audio id="musica-juego" src="music/romantico.mp3" loop></audio>
 
 </div>
-
 
 <script src="script.js"></script>
 </body>
