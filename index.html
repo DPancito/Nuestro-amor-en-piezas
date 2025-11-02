@@ -8,28 +8,48 @@
 </head>
 <body>
 
-<!-- ✅ Pantalla de INICIO -->
+<!-- ✅ PANTALLA DE INICIO (ÚNICA visible al principio) -->
 <div id="pantalla-inicio" class="pantalla visible">
+
+    <!-- Video de fondo -->
     <video id="video-fondo" autoplay muted loop playsinline>
         <source src="Portada.mp4" type="video/mp4">
     </video>
 
+    <!-- Capa oscura para que texto y botones se vean -->
     <div class="overlay-negro"></div>
 
+    <!-- Botones centrados -->
     <div class="contenedor-botones">
         <h1 class="titulo">ROMPECABEZAS</h1>
         <button class="btn" onclick="iniciarJuego()">Comenzar</button>
-        <button class="btn" onclick="seleccionarNivel()">Nivel</button>
+        <button class="btn" onclick="mostrarNiveles()">Seleccionar nivel</button>
     </div>
 
-    <audio id="musica-inicio" src="music.mp3" loop autoplay></audio>
+    <!-- Música inicio -->
+    <audio id="musica-inicio" src="music.mp3" autoplay loop></audio>
     <button id="mute-btn" class="mute-btn" onclick="toggleMute()">🔊</button>
 </div>
 
 
+<!-- ✅ PANTALLA DE SELECCIÓN DE NIVEL -->
+<div id="pantalla-niveles" class="pantalla">
 
-<!-- ✅ Pantalla de JUEGO -->
+    <div class="contenedor-botones">
+        <h2 class="titulo">Elige el nivel</h2>
+        <button class="btn" onclick="setNivel(3)">3 x 3</button>
+        <button class="btn" onclick="setNivel(4)">4 x 4</button>
+        <button class="btn" onclick="setNivel(5)">5 x 5</button>
+        <br>
+        <button class="btn" onclick="volverInicio()">Volver</button>
+    </div>
+
+</div>
+
+
+<!-- ✅ PANTALLA DEL JUEGO -->
 <div id="pantalla-juego" class="pantalla">
+
     <div class="top-controls">
         <button class="btn2" onclick="mezclar()">Mezclar</button>
         <button class="btn2" onclick="cargarOtraImagen()">Otra imagen</button>
@@ -38,9 +58,13 @@
 
     <div id="tablero"></div>
 
+    <!-- Música juego -->
     <audio id="musica-juego" src="music.mp3" loop></audio>
+
 </div>
+
 
 <script src="script.js"></script>
 </body>
 </html>
+
