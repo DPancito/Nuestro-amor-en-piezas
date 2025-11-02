@@ -1,52 +1,49 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nuestro amor entre piezas ❤️</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestro Amor en Piezas</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ✅ Pantalla Principal -->
-<div id="pantalla-inicio" class="pantalla visible">
+    <!-- ✅ Música de fondo -->
+    <audio id="bgm" src="musica/romantico.mp3" autoplay loop></audio>
 
-    <div class="contenedor">
-        <h1 class="titulo">Nuestro amor entre piezas ❤️</h1>
+    <!-- ✅ Pantalla de inicio -->
+    <div id="inicio" class="pantalla">
 
-        <select id="dificultad">
-            <option value="3">Fácil (3x3)</option>
-            <option value="4">Medio (4x4)</option>
-            <option value="5">Difícil (5x5)</option>
-        </select>
+        <!-- ✅ Video como fondo -->
+        <video id="videoFondo" autoplay loop muted playsinline>
+            <source src="Portada.mp4" type="video/mp4">
+        </video>
 
-        <button class="btn" onclick="iniciarJuego()">Comenzar</button>
+        <!-- ✅ Contenedor central de botones -->
+        <div class="menu-centro">
+            <h1 class="titulo">Nuestro Amor en Piezas</h1>
 
-        <button class="btn-peq" onclick="toggleMute()">🔊 / 🔇 Música</button>
+            <button class="btn" onclick="cambiarNivel(3)">Nivel Fácil (3x3)</button>
+            <button class="btn" onclick="cambiarNivel(4)">Nivel Medio (4x4)</button>
+            <button class="btn" onclick="cambiarNivel(5)">Nivel Difícil (5x5)</button>
+
+            <button class="btn principal" onclick="comenzar()">Comenzar</button>
+        </div>
     </div>
 
-    <audio id="musica-inicio" src="music/romantico.mp3" autoplay loop></audio>
+    <!-- ✅ Pantalla del rompecabezas -->
+    <div id="juego" class="pantalla oculto">
+        <div class="zona-juego">
+            <canvas id="tablero"></canvas>
 
-</div>
-
-<!-- ✅ Pantalla del Juego -->
-<div id="pantalla-juego" class="pantalla">
-
-    <h2 id="tituloImagen"></h2>
-
-    <div id="tablero"></div>
-
-    <div class="controls">
-        <button class="btn2" onclick="mezclar()">Mezclar</button>
-        <button class="btn2" onclick="siguienteImagen()">Otra imagen</button>
-        <button class="btn2" onclick="volverInicio()">Volver al inicio</button>
+            <div class="botonera">
+                <button class="btn" onclick="barajar()">Mezclar</button>
+                <button class="btn" onclick="nuevaImagen()">Otra Imagen</button>
+                <button class="btn" onclick="volverInicio()">Volver</button>
+            </div>
+        </div>
     </div>
-
-    <audio id="musica-juego" src="music/romantico.mp3" loop></audio>
-
-</div>
 
 <script src="script.js"></script>
 </body>
 </html>
-
