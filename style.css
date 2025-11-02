@@ -1,85 +1,96 @@
-body{
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:black;
-    color:white;
-    text-align:center;
+body {
+    margin: 0;
+    background: #000;
+    font-family: 'Arial', sans-serif;
+    color: white;
+    overflow: hidden;
 }
 
-.pantalla{
-    display:none;
-    width:100vw;
-    height:100vh;
-    justify-content:center;
-    align-items:center;
+/* 📌 Pantallas */
+.pantalla {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0; left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.pantalla.visible{
-    display:flex;
+.oculto {
+    display: none !important;
 }
 
-.titulo{
-    font-size:32px;
-    margin-bottom:20px;
-    color:#ff9ece;
+/* 📌 Video */
+#videoFondo {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: black;
 }
 
-/* Botones principales */
-.btn{
-    padding:15px 30px;
-    margin:10px;
-    background:#ff9ece;
-    border:none;
-    border-radius:10px;
-    color:black;
-    font-size:18px;
-    cursor:pointer;
+/* 📌 Menú central */
+.menu-centro {
+    position: relative;
+    z-index: 10;
+    text-align: center;
 }
 
-.btn-peq{
-    padding:5px 12px;
-    background:#ff9ece;
-    border:none;
-    color:black;
-    margin-top:10px;
-    border-radius:6px;
-    cursor:pointer;
+.titulo {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #ff3f94;
 }
 
-/* Botones en el juego */
-.btn2{
-    padding:10px 20px;
-    background:#ff9ece;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    color:black;
-    margin:3px;
+/* 📌 Botones rosados */
+.btn {
+    background: #ff69b4;
+    border: none;
+    padding: 15px;
+    margin: 8px;
+    font-size: 18px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    width: 200px;
+    transition: 0.2s;
 }
 
-/* Tablero responsive */
-#tablero{
-    display:grid;
-    margin:auto;
-    width:80vmin;
-    height:80vmin;
-    max-width:95vw;
-    max-height:95vw;
-    background:#ffe5f4;
-    border-radius:10px;
-    box-shadow:0 0 10px #ff9ece;
-    overflow:hidden;
+.btn:hover {
+    background: #ff8bc8;
 }
 
-/* Cada pieza */
-.pieza{
-    background-size:cover;
-    background-position:center;
-    cursor:pointer;
-    border:1px solid #ffb3d9;
+.principal {
+    background: #ff3f94;
 }
 
-/* Única pieza vacía */
-.vacia{
-    background:#ffd1ec !important;
+/* 📌 Juego */
+.zona-juego {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
+canvas {
+    background: #111;
+    margin-bottom: 20px;
+    max-width: 90vw;
+    max-height: 70vh;
+    border: 3px solid #ff69b4;
+    border-radius: 10px;
+}
+
+/* Responsivo */
+@media(max-width: 600px) {
+    .btn {
+        width: 90%;
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    .titulo {
+        font-size: 24px;
+    }
+}
+
