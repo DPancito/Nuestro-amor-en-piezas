@@ -38,11 +38,14 @@ function iniciarJuego() {
     document.getElementById("menu").style.display = "none";
     document.getElementById("juego").style.display = "block";
 
-    // Reproducir música solo tras interacción del usuario
+    // Reproducir música desde un punto aleatorio
     const audio = document.getElementById("musica");
     audio.currentTime = Math.random() * Math.max(1, audio.duration || 3600 - 10);
     audio.volume = 0;
-    audio.play().then(() => fadeIn(audio)).catch(() => console.log("La música necesita interacción del usuario"));
+
+    audio.play()
+        .then(() => fadeIn(audio))
+        .catch(() => console.log("La música necesita interacción del usuario"));
 
     mostrarImagen();
 }
@@ -64,4 +67,3 @@ function siguienteImagen() {
 function mezclar() {
     document.getElementById("mensaje").innerText = "¡Puzzle mezclado!";
 }
-
