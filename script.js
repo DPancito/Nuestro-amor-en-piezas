@@ -1,179 +1,157 @@
+// ==== VARIABLES ====
+let canvas = document.getElementById("puzzle");
+let ctx = canvas.getContext("2d");
 let imagenes = [];
-let indiceActual = 0;
-let filas = 3;
-let columnas = 3;
-let canvas, ctx;
+let imagenActual = null;
+let nivel = 4; // 4x4
 let piezas = [];
-let piezaVacia;
-let imgActual = new Image();
+let vacia = { fila: 0, col: 0 };
 
-// --- CARGAR IMÁGENES ---
-fetch('images.json')
-  .then(res => res.json())
-  .then(data => {
-    imagenes = data;
-    crearCollage();
-  });
-
-// --- CREAR COLLAGE 5x5 ---
-function crearCollage() {
-    const collageDiv = document.getElementById("collage");
-    collageDiv.innerHTML = '';
-    const seleccionadas = [];
-    while(seleccionadas.length < 25){
-        const rand = imagenes[Math.floor(Math.random()*imagenes.length)];
-        if(!seleccionadas.includes(rand)) seleccionadas.push(rand);
-    }
-    seleccionadas.forEach(src => {
-        const img = document.createElement("img");
-        img.src = `images/${src}`;
-        collageDiv.appendChild(img);
+// ==== CARGAR IMÁGENES ====
+fetch("images.json")
+    .then(r => r.json())
+    .then(data => {
+        imagenes = data;
     });
+
+// ==== EMPEZAR ====
+function empezarJuego() {
+    document.getElementById("pantalla-inicio").classList.add("oculto");
+    document.getElementById("pantalla-juego").classList.remove("oculto");
+
+    reproducirMusica();
+    nuevaImagen();
 }
 
-// --- AJUSTAR CANVAS ---
-function ajustarCanvas() {
-    canvas = document.getElementById("puzzleCanvas");
-    ctx = canvas.getContext("2d");
-    const tamaño = Math.min(window.innerWidth, window.innerHeight) * 0.9;
-    canvas.width = tamaño;
-    canvas.height = tamaño;
-}
-
-// --- MOSTRAR IMAGEN ---
-function mostrarImagen(indice = null) {
-    if (indice === null) indice = Math.floor(Math.random() * imagenes.length);
-    indiceActual = indice;
-    imgActual.src = `images/${imagenes[indice]}`;
-    imgActual.onload = () => {
-        ajustarCanvas();
-        piezas = [];
-        const piezaAncho = canvas.width / columnas;
-        const piezaAlto = canvas.height / filas;
-
-        for (let i = 0; i < filas; i++) {
-            for (let j = 0; j < columnas; j++) {
-                const esVacia = (i === filas - 1 && j === columnas - 1);
-                piezas.push({
-                    sx: j * (imgActual.width / columnas),
-                    sy: i * (imgActual.height / filas),
-                    sw: imgActual.width / columnas,
-                    sh: imgActual.height / filas,
-                    x: j,
-                    y: i,
-                    empty: esVacia
-                });
-                if (esVacia) piezaVacia = {x:j, y:i};
-            }
-        }
-        dibujarPiezas();
-    }
-}
-
-// --- DIBUJAR PIEZAS ---
-function dibujarPiezas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const ancho = canvas.width / columnas;
-    const alto = canvas.height / filas;
-    piezas.forEach(p => {
-        if(!p.empty){
-            ctx.drawImage(imgActual, p.sx, p.sy, p.sw, p.sh, p.x*ancho, p.y*alto, ancho, alto);
-        } else {
-            ctx.fillStyle = "#000";
-            ctx.fillRect(p.x*ancho, p.y*alto, ancho, alto);
-        }
-    });
-}
-
-// --- INICIAR JUEGO ---
-function iniciarJuego() {
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("juego").style.display = "block";
-
-    filas = columnas = parseInt(document.getElementById("dificultad").value);
-
-    // Música
+// ==== AUDIO ====
+function reproducirMusica() {
     const audio = document.getElementById("musica");
-    audio.currentTime = Math.random() * Math.max(1, audio.duration || 3600 - 10);
-    audio.volume = 0;
-    audio.play().then(() => fadeIn(audio)).catch(() => console.log("Interacción necesaria para música"));
-
-    mostrarImagen(); // imagen completa sin mezclar
+    audio.volume = 0.6;
+    audio.play().catch(()=>{});
 }
 
-// --- FADE-IN ---
-function fadeIn(audio,target=0.5,step=0.02,intervalMs=150){
-    const iv = setInterval(()=>{
-        audio.volume = Math.min(audio.volume + step,target);
-        if(audio.volume>=target) clearInterval(iv);
-    },intervalMs);
+// ==== ELEGIR OTRA IMAGEN ====
+function nuevaImagen() {
+    if (imagenes.length === 0) return;
+
+    const random = Math.floor(Math.random() * imagenes.length);
+    const img = new Image();
+    img.src = imagenes[random];
+
+    img.onload = () => {
+        imagenActual = img;
+        prepararPuzzle(img);
+        mezclarPiezas();
+    };
 }
 
-// --- MEZCLAR PIEZAS ---
-function mezclarPiezas(){
-    for(let i=0;i<1000;i++){
-        const adyacentes = piezas.filter(p=> esAdyacenteVacia(p));
-        const mover = adyacentes[Math.floor(Math.random()*adyacentes.length)];
-        moverPieza(mover,false);
+// ==== PREPARAR PUZZLE ====
+function prepararPuzzle(img) {
+    // ajustar canvas al dispositivo sin deformar
+    let lado = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.7);
+    canvas.width = lado;
+    canvas.height = lado;
+
+    piezas = [];
+    const anchoP = lado / nivel;
+    const altoP = lado / nivel;
+
+    for (let f = 0; f < nivel; f++) {
+        for (let c = 0; c < nivel; c++) {
+            let esUltima = (f === nivel - 1 && c === nivel - 1);
+            piezas.push({
+                fila: f,
+                col: c,
+                x: c * anchoP,
+                y: f * altoP,
+                vacia: esUltima
+            });
+        }
     }
-    dibujarPiezas();
+
+    vacia = piezas[piezas.length - 1];
+    dibujarPuzzle(img);
 }
 
-// --- PIEZA ADYACENTE ---
-function esAdyacenteVacia(p){
-    const dx = Math.abs(p.x - piezaVacia.x);
-    const dy = Math.abs(p.y - piezaVacia.y);
-    return (dx+dy)===1;
-}
+// ==== DIBUJAR ====
+function dibujarPuzzle(img) {
+    ctx.fillStyle = "#ffb7d5"; // fondo rosa suave donde no hay imagen
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-// --- MOVER PIEZA ---
-function moverPieza(pieza, redraw=true){
-    if(esAdyacenteVacia(pieza)){
-        const tempX = pieza.x;
-        const tempY = pieza.y;
-        pieza.x = piezaVacia.x;
-        pieza.y = piezaVacia.y;
-        piezaVacia.x = tempX;
-        piezaVacia.y = tempY;
-        if(redraw) dibujarPiezas();
-    }
-}
+    const sw = img.width / nivel;
+    const sh = img.height / nivel;
+    const dw = canvas.width / nivel;
+    const dh = canvas.height / nivel;
 
-// --- CLIC / TOUCH ---
-function manejarClick(e){
-    const rect = canvas.getBoundingClientRect();
-    const xClick = (e.clientX||e.touches[0].clientX) - rect.left;
-    const yClick = (e.clientY||e.touches[0].clientY) - rect.top;
-    const ancho = canvas.width / columnas;
-    const alto = canvas.height / filas;
-    const xPieza = Math.floor(xClick / ancho);
-    const yPieza = Math.floor(yClick / alto);
-
-    const pieza = piezas.find(p=>p.x===xPieza && p.y===yPieza);
-    if(pieza && !pieza.empty){
-        moverPieza(pieza);
-        verificarPuzzleCompleto();
-    }
-}
-
-// --- VERIFICAR COMPLETADO ---
-function verificarPuzzleCompleto(){
-    let completo = piezas.every((p,i)=>{
-        const fila = Math.floor(i/columnas);
-        const col = i%columnas;
-        return p.x===col && p.y===fila;
+    piezas.forEach(p => {
+        if (!p.vacia) {
+            ctx.drawImage(
+                img,
+                p.col * sw, p.fila * sh, sw, sh,
+                p.x, p.y, dw, dh
+            );
+        } else {
+            // pieza vacía = negro
+            ctx.fillStyle = "#000000";
+            ctx.fillRect(p.x, p.y, dw, dh);
+        }
     });
-    if(completo) document.getElementById("mensaje").innerText="¡Felicidades! 💖 Puzzle completado";
 }
 
-// --- SIGUIENTE IMAGEN ---
-function siguienteImagen(){
-    mostrarImagen();
+// ==== MEZCLAR ====
+function mezclarPiezas() {
+    for (let i = 0; i < 500; i++) moverAleatorio();
+    dibujarPuzzle(imagenActual);
 }
 
-// --- EVENTOS ---
-window.addEventListener('resize',()=>{ if(document.getElementById("juego").style.display==="block") dibujarPiezas(); });
-canvas = document.getElementById("puzzleCanvas");
-canvas.addEventListener('click', manejarClick);
-canvas.addEventListener('touchstart', e=>{ e.preventDefault(); manejarClick(e); });
+function moverAleatorio() {
+    const ady = piezas.filter(p =>
+        !p.vacia &&
+        ((Math.abs(p.fila - vacia.fila) === 1 && p.col === vacia.col) ||
+        (Math.abs(p.col - vacia.col) === 1 && p.fila === vacia.fila))
+    );
 
+    if (ady.length === 0) return;
+    const pieza = ady[Math.floor(Math.random() * ady.length)];
+
+    intercambiar(pieza);
+}
+
+function intercambiar(p) {
+    const tmpX = p.x, tmpY = p.y, tmpF = p.fila, tmpC = p.col;
+
+    p.x = vacia.x; p.y = vacia.y;
+    p.fila = vacia.fila; p.col = vacia.col;
+
+    vacia.x = tmpX; vacia.y = tmpY;
+    vacia.fila = tmpF; vacia.col = tmpC;
+}
+
+// ==== INTERACCIÓN TÁCTIL/CORTE ====
+canvas.addEventListener("click", moverSiPosible);
+canvas.addEventListener("touchstart", e => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.touches[0].clientX - rect.left;
+    const y = e.touches[0].clientY - rect.top;
+    moverSiPosible({ offsetX: x, offsetY: y });
+});
+
+function moverSiPosible(e) {
+    const dw = canvas.width / nivel;
+    const dh = canvas.height / nivel;
+
+    const col = Math.floor(e.offsetX / dw);
+    const fila = Math.floor(e.offsetY / dh);
+
+    const pieza = piezas.find(p => p.fila === fila && p.col === col);
+    if (!pieza || pieza.vacia) return;
+
+    const cerca =
+        (pieza.fila === vacia.fila && Math.abs(pieza.col - vacia.col) === 1) ||
+        (pieza.col === vacia.col && Math.abs(pieza.fila - vacia.fila) === 1);
+
+    if (cerca) {
+        intercambiar(pieza);
+        dibujarPuzzle(imagenActual);
+    }
+}
