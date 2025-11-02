@@ -7,32 +7,38 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<!-- Música romántica -->
+<audio id="musica" preload="auto" src="https://drive.google.com/uc?export=download&id=1Y54P-U7ovvoRYXS6FxHMwrfW-E8ZOCRj"></audio>
 
-<div id="pantalla-inicio">
-    <h1>💖 Nuestro Amor 💖</h1>
-    <p>Selecciona la dificultad y comienza tu regalo</p>
-
-    <select id="dificultad">
-        <option value="3">Fácil (3x3)</option>
-        <option value="4">Medio (4x4)</option>
-        <option value="5">Difícil (5x5)</option>
-    </select>
-
-    <button id="btnIniciar">Comenzar</button>
+<!-- Menú principal -->
+<div id="menu">
+  <h1>Rompecabezas del Amor ❤️</h1>
+  <p>Selecciona la dificultad y comienza el juego</p>
+  <select id="dificultad">
+    <option value="3">Fácil (3x3)</option>
+    <option value="4">Medio (4x4)</option>
+    <option value="5">Difícil (5x5)</option>
+  </select>
+  <button onclick="iniciarJuego()">Comenzar</button>
 </div>
 
-<div id="contenedor" class="oculto">
-    <canvas id="puzzleCanvas" width="500" height="500"></canvas>
-    <div class="controls">
-        <button id="btnMezclar">Mezclar</button>
-        <button id="btnSiguiente">Siguiente imagen</button>
-    </div>
-    <div id="mensaje"></div>
+<!-- Zona del juego -->
+<div id="juego" style="display:none;">
+  <h2 id="tituloImagen"></h2>
+  <canvas id="puzzleCanvas" width="500" height="500"></canvas>
+  <div class="controls">
+    <button onclick="mezclar()">Mezclar</button>
+    <button onclick="siguienteImagen()">Siguiente imagen</button>
+  </div>
+  <p id="mensaje"></p>
 </div>
-
-<!-- Música -->
-<audio id="musica" src="mix-romantico-1h.mp3" preload="auto"></audio>
 
 <script src="script.js"></script>
 </body>
 </html>
+
+
+<script src="script.js"></script>
+</body>
+</html>
+
