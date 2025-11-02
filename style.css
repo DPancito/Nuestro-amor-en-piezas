@@ -1,61 +1,113 @@
+/* Reset y cuerpo */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    text-align: center;
-    background: #fff0f5;
+    overflow-x: hidden;
 }
 
-#menu h1 {
-    margin-top: 10px;
-}
-
-#collage-container {
+/* MENU PRINCIPAL CON VIDEO */
+#menu {
     position: relative;
-    display: inline-block;
-    margin-top: 10px;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
-#collage {
-    display: grid;
-    grid-template-columns: repeat(5, 60px);
-    grid-template-rows: repeat(5, 60px);
-    gap: 3px;
-}
-
-#collage img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 5px;
-}
-
-#menu-overlay {
+#videoPortada {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none; /* permite click a botones */
+    object-fit: cover; /* Mantener proporción y cubrir pantalla */
+    transform: translate(-50%, -50%);
+    z-index: 1;
 }
 
+/* SUPERPOSICIÓN DE BOTONES Y TEXTO */
+#menu-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    color: #fff;
+    text-align: center;
+    backdrop-filter: blur(5px); /* Sutil efecto de difuminado */
+    padding: 20px 30px;
+    border-radius: 15px;
+    background: rgba(255, 182, 193, 0.2); /* Rosa sutil */
+}
+
+#menu-overlay h1 {
+    font-size: 2em;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    margin: 0;
+}
+
+/* SELECTOR Y BOTONES */
 #menu-overlay select,
 #menu-overlay button {
-    pointer-events: auto; /* activable */
-    margin: 5px;
-    padding: 8px 15px;
     font-size: 16px;
-    border-radius: 5px;
+    padding: 10px 20px;
+    border-radius: 10px;
     border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+#menu-overlay select {
+    background: rgba(255, 192, 203, 0.7); /* rosa ligero */
+    color: #003B7C;
+}
+
+#menu-overlay select:hover {
+    background: rgba(255, 182, 193, 0.9);
+}
+
+#menu-overlay button {
+    background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+    color: #fff;
+    font-weight: bold;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
+}
+
+#menu-overlay button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 6px 12px rgba(0,0,0,0.4);
+}
+
+/* ZONA DEL JUEGO */
+#puzzleCanvas {
+    display: block;
+    margin: 10px auto;
+    border: 2px solid #003B7C;
+    touch-action: none;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.controls button {
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: none;
+    background: #ffb6c1;
+    color: #003B7C;
+    font-weight: bold;
     cursor: pointer;
 }
 
-#puzzleCanvas {
-    border: 2px solid #003B7C;
-    touch-action: none;
-    margin-top: 10px;
+.controls button:hover {
+    background: #ff69b4;
+    color: #fff;
 }
-
