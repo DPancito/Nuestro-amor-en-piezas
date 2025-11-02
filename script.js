@@ -33,8 +33,10 @@ function mostrarImagen(indice = null) {
         const piezaAncho = canvas.width / columnas;
         const piezaAlto = canvas.height / filas;
 
+        // Crear piezas: todas válidas excepto la última que será vacía
         for (let i = 0; i < filas; i++) {
             for (let j = 0; j < columnas; j++) {
+                const esVacia = (i === filas - 1 && j === columnas - 1);
                 piezas.push({
                     sx: j * (imgActual.width / columnas),
                     sy: i * (imgActual.height / filas),
@@ -42,23 +44,24 @@ function mostrarImagen(indice = null) {
                     sh: imgActual.height / filas,
                     x: j,
                     y: i,
-                    empty: (i === filas-1 && j === columnas-1)
+                    empty: esVacia
                 });
-                if(i === filas-1 && j === columnas-1) piezaVacia = {x:j, y:i};
+                if (esVacia) piezaVacia = {x:j, y:i};
             }
         }
-        mezclarPiezas();
+
+        // Mostrar imagen completa al iniciar
         dibujarPiezas();
     }
 }
 
 // --- DIBUJAR PIEZAS ---
 function dibujarPiezas() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     const ancho = canvas.width / columnas;
     const alto = canvas.height / filas;
     piezas.forEach(p => {
-        if(!p.empty) {
+        if(!p.empty){
             ctx.drawImage(imgActual, p.sx, p.sy, p.sw, p.sh, p.x*ancho, p.y*alto, ancho, alto);
         }
     });
@@ -76,7 +79,7 @@ function iniciarJuego() {
     audio.volume = 0;
     audio.play().then(() => fadeIn(audio)).catch(() => console.log("La música necesita interacción"));
 
-    mostrarImagen();
+    mostrarImagen(); // mostrar imagen sin mezclar
 }
 
 // --- FADE-IN ---
@@ -89,6 +92,7 @@ function fadeIn(audio,target=0.5,step=0.02,intervalMs=150){
 
 // --- MEZCLAR PIEZAS ---
 function mezclarPiezas(){
+    // 1000 movimientos aleatorios
     for(let i=0;i<1000;i++){
         const adyacentes = piezas.filter(p=> esAdyacenteVacia(p));
         const mover = adyacentes[Math.floor(Math.random()*adyacentes.length)];
