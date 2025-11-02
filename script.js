@@ -2,15 +2,13 @@ let filas = 5;
 let columnas = 5;
 let piezas = [];
 let vaciaIndex = null;
-let imagenes = [
-    "img1.jpg", "img2.jpg", "img3.jpg"
-];
-
+let imagenes = ["img1.jpg","img2.jpg","img3.jpg"];
 let imagenActual = imagenes[0];
 
+/* ===== NAVEGACIÓN PANTALLAS ===== */
 function iniciarJuego(){
-    document.getElementById("pantalla-inicio").classList.remove("visible");
-    document.getElementById("pantalla-juego").classList.add("visible");
+    ocultar("pantalla-inicio");
+    mostrar("pantalla-juego");
 
     document.getElementById("musica-inicio").pause();
     document.getElementById("musica-juego").play();
@@ -18,15 +16,29 @@ function iniciarJuego(){
     crearTablero();
 }
 
+function mostrarNiveles(){
+    ocultar("pantalla-inicio");
+    mostrar("pantalla-niveles");
+}
+
+function setNivel(n){
+    filas = columnas = n;
+    ocultar("pantalla-niveles");
+    mostrar("pantalla-juego");
+    document.getElementById("musica-inicio").pause();
+    document.getElementById("musica-juego").play();
+    crearTablero();
+}
+
 function volverInicio(){
     location.reload();
 }
 
-function seleccionarNivel(){
-    alert("Aquí puedes agregar selección de dificultad si lo deseas.");
-}
+function mostrar(id){ document.getElementById(id).classList.add("visible"); }
+function ocultar(id){ document.getElementById(id).classList.remove("visible"); }
 
-/* ===== CREA EL TABLERO SIN MEZCLAR AÚN ===== */
+
+/* ===== CREAR TABLERO SIN MEZCLAR ===== */
 function crearTablero(){
     const tablero = document.getElementById("tablero");
     tablero.innerHTML = "";
@@ -36,48 +48,40 @@ function crearTablero(){
     tablero.style.gridTemplateRows = `repeat(${filas}, 1fr)`;
 
     let total = filas * columnas;
-    let vaciaPos = Math.floor(Math.random() * total);
+    let vaciaPos = Math.floor(Math.random()*total);
     vaciaIndex = vaciaPos;
 
-    for(let i=0; i<total; i++){
-        let div = document.createElement("div");
-        div.classList.add("pieza");
-        piezas.push(div);
+    for(let i=0;i<total;i++){
+        let d = document.createElement("div");
+        d.classList.add("pieza");
+        piezas.push(d);
 
         if(i === vaciaPos){
-            div.classList.add("vacia");
+            d.classList.add("vacia");
         } else {
-            div.style.backgroundImage = `url(${imagenActual})`;
+            d.style.backgroundImage = `url(${imagenActual})`;
         }
 
-        div.addEventListener("click", ()=> mover(i));
-        tablero.appendChild(div);
+        d.addEventListener("click", ()=> mover(i));
+        tablero.appendChild(d);
     }
 }
 
-/* ===== MEZCLA las piezas (solo una ficha vacía real) ===== */
+/* ===== MEZCLAR SOLO AL APRETAR ===== */
 function mezclar(){
-    for(let i=0; i<200; i++){
+    for(let i=0;i<200;i++){
         let movibles = obtenerMovibles();
-        let elig = movibles[Math.floor(Math.random()*movibles.length)];
-        intercambiar(elig, vaciaIndex);
+        let r = movibles[Math.floor(Math.random()*movibles.length)];
+        intercambiar(r, vaciaIndex);
     }
 }
 
-/* ===== Saber qué piezas se pueden mover ===== */
 function obtenerMovibles(){
     let mov = [];
-    let filaV = Math.floor(vaciaIndex / columnas);
-    let colV = vaciaIndex % columnas;
+    let fV = Math.floor(vaciaIndex / columnas);
+    let cV = vaciaIndex % columnas;
 
-    const posibles = [
-        [filaV-1, colV],
-        [filaV+1, colV],
-        [filaV, colV-1],
-        [filaV, colV+1]
-    ];
-
-    posibles.forEach(([f,c])=>{
+    [[fV-1,cV],[fV+1,cV],[fV,cV-1],[fV,cV+1]].forEach(([f,c])=>{
         if(f>=0 && f<filas && c>=0 && c<columnas){
             mov.push(f*columnas + c);
         }
@@ -86,20 +90,19 @@ function obtenerMovibles(){
     return mov;
 }
 
-/* ===== Mover pieza si es adyacente ===== */
 function mover(i){
     if(obtenerMovibles().includes(i)){
         intercambiar(i, vaciaIndex);
     }
 }
 
-function intercambiar(i, j){
+function intercambiar(i,j){
     let a = piezas[i];
     let b = piezas[j];
 
-    let imgA = a.style.backgroundImage;
+    let tmp = a.style.backgroundImage;
     a.style.backgroundImage = b.style.backgroundImage;
-    b.style.backgroundImage = imgA;
+    b.style.backgroundImage = tmp;
 
     a.classList.toggle("vacia");
     b.classList.toggle("vacia");
@@ -107,20 +110,22 @@ function intercambiar(i, j){
     vaciaIndex = i;
 }
 
-/* ===== Cambiar imagen ===== */
+/* ===== CAMBIAR IMAGEN ===== */
 function cargarOtraImagen(){
     imagenActual = imagenes[Math.floor(Math.random()*imagenes.length)];
     crearTablero();
 }
 
-/* ===== MUTEO ===== */
+/* ===== MUTE ===== */
 function toggleMute(){
     const m1 = document.getElementById("musica-inicio");
     const m2 = document.getElementById("musica-juego");
 
-    m1.muted = !m1.muted;
-    m2.muted = !m2.muted;
+    let muted = !m1.muted;
+    m1.muted = muted;
+    m2.muted = muted;
 
-    document.getElementById("mute-btn").innerText = m1.muted ? "🔇" : "🔊";
+    document.getElementById("mute-btn").innerHTML = muted ? "🔇" : "🔊";
 }
+
 
