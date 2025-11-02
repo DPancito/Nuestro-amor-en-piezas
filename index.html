@@ -1,43 +1,39 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nuestro amor entre piezas ❤️</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuestro Amor en Piezas</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<!-- MENU PRINCIPAL CON VIDEO -->
-<div id="menu">
-    <video id="videoPortada" autoplay muted loop playsinline>
-        <source src="Portada.mp4" type="video/mp4">
-        Tu navegador no soporta videos HTML5
-    </video>
+    <!-- 🔹 Pantalla inicial con video -->
+    <div id="pantalla-inicio">
+        <video id="video-portada" autoplay muted loop playsinline>
+            <source src="Portada.mp4" type="video/mp4">
+        </video>
 
-    <div id="menu-overlay">
-        <h1>Nuestro amor entre piezas ❤️</h1>
-        <select id="dificultad">
-            <option value="3">Fácil (3x3)</option>
-            <option value="4">Medio (4x4)</option>
-            <option value="5">Difícil (5x5)</option>
-        </select>
-        <button onclick="iniciarJuego()">Comenzar</button>
+        <div id="menu-inicio">
+            <h1 class="titulo-portada">Nuestro Amor en Piezas</h1>
+            <button class="btn-romantico" onclick="empezarJuego()">Comenzar</button>
+        </div>
     </div>
-</div>
 
-<!-- ZONA DEL JUEGO -->
-<div id="juego" style="display:none;">
-    <h2 id="tituloImagen"></h2>
-    <canvas id="puzzleCanvas"></canvas>
-    <div class="controls">
-        <button onclick="mezclarPiezas()">Mezclar</button>
-        <button onclick="siguienteImagen()">Siguiente imagen</button>
+    <!-- 🔹 Pantalla del puzzle -->
+    <div id="pantalla-juego" class="oculto">
+        <canvas id="puzzle"></canvas>
+
+        <div id="controles">
+            <button class="btn-romantico" onclick="mezclarPiezas()">Mezclar</button>
+            <button class="btn-romantico" onclick="nuevaImagen()">Otra Imagen</button>
+        </div>
     </div>
-    <p id="mensaje"></p>
-</div>
 
-<script src="script.js"></script>
+    <audio id="musica" src="musica/romantico.mp3" preload="auto"></audio>
+
+    <script src="script.js"></script>
 </body>
 </html>
 
