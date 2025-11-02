@@ -1,4 +1,3 @@
-// --- VARIABLES ---
 let imagenes = [];
 let indiceActual = 0;
 let filas = 3;
@@ -16,15 +15,18 @@ fetch('images.json')
     crearCollage();
   });
 
-// --- CREAR COLLAGE ---
+// --- CREAR COLLAGE 5x5 ---
 function crearCollage() {
     const collageDiv = document.getElementById("collage");
     collageDiv.innerHTML = '';
-    const mostrar = imagenes.slice(0, Math.min(6, imagenes.length));
-    mostrar.forEach(src => {
+    const seleccionadas = [];
+    while(seleccionadas.length < 25){
+        const rand = imagenes[Math.floor(Math.random()*imagenes.length)];
+        if(!seleccionadas.includes(rand)) seleccionadas.push(rand);
+    }
+    seleccionadas.forEach(src => {
         const img = document.createElement("img");
         img.src = `images/${src}`;
-        img.className = "mini-img";
         collageDiv.appendChild(img);
     });
 }
@@ -77,7 +79,7 @@ function dibujarPiezas() {
         if(!p.empty){
             ctx.drawImage(imgActual, p.sx, p.sy, p.sw, p.sh, p.x*ancho, p.y*alto, ancho, alto);
         } else {
-            ctx.fillStyle = "#000"; // espacio vacío
+            ctx.fillStyle = "#000";
             ctx.fillRect(p.x*ancho, p.y*alto, ancho, alto);
         }
     });
@@ -96,7 +98,7 @@ function iniciarJuego() {
     audio.volume = 0;
     audio.play().then(() => fadeIn(audio)).catch(() => console.log("Interacción necesaria para música"));
 
-    mostrarImagen(); // mostrar imagen completa sin mezclar
+    mostrarImagen(); // imagen completa sin mezclar
 }
 
 // --- FADE-IN ---
@@ -174,3 +176,4 @@ window.addEventListener('resize',()=>{ if(document.getElementById("juego").style
 canvas = document.getElementById("puzzleCanvas");
 canvas.addEventListener('click', manejarClick);
 canvas.addEventListener('touchstart', e=>{ e.preventDefault(); manejarClick(e); });
+
