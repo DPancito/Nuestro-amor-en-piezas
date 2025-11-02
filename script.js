@@ -11,7 +11,23 @@ let imgActual = new Image();
 // --- CARGAR IMÁGENES ---
 fetch('images.json')
   .then(res => res.json())
-  .then(data => imagenes = data);
+  .then(data => {
+    imagenes = data;
+    crearCollage();
+  });
+
+// --- CREAR COLLAGE ---
+function crearCollage() {
+    const collageDiv = document.getElementById("collage");
+    collageDiv.innerHTML = '';
+    const mostrar = imagenes.slice(0, Math.min(6, imagenes.length));
+    mostrar.forEach(src => {
+        const img = document.createElement("img");
+        img.src = `images/${src}`;
+        img.className = "mini-img";
+        collageDiv.appendChild(img);
+    });
+}
 
 // --- AJUSTAR CANVAS ---
 function ajustarCanvas() {
@@ -33,7 +49,6 @@ function mostrarImagen(indice = null) {
         const piezaAncho = canvas.width / columnas;
         const piezaAlto = canvas.height / filas;
 
-        // Crear piezas: todas válidas excepto la última que será vacía
         for (let i = 0; i < filas; i++) {
             for (let j = 0; j < columnas; j++) {
                 const esVacia = (i === filas - 1 && j === columnas - 1);
@@ -49,8 +64,6 @@ function mostrarImagen(indice = null) {
                 if (esVacia) piezaVacia = {x:j, y:i};
             }
         }
-
-        // Mostrar imagen completa al iniciar
         dibujarPiezas();
     }
 }
@@ -63,6 +76,9 @@ function dibujarPiezas() {
     piezas.forEach(p => {
         if(!p.empty){
             ctx.drawImage(imgActual, p.sx, p.sy, p.sw, p.sh, p.x*ancho, p.y*alto, ancho, alto);
+        } else {
+            ctx.fillStyle = "#000"; // espacio vacío
+            ctx.fillRect(p.x*ancho, p.y*alto, ancho, alto);
         }
     });
 }
@@ -74,12 +90,13 @@ function iniciarJuego() {
 
     filas = columnas = parseInt(document.getElementById("dificultad").value);
 
+    // Música
     const audio = document.getElementById("musica");
     audio.currentTime = Math.random() * Math.max(1, audio.duration || 3600 - 10);
     audio.volume = 0;
-    audio.play().then(() => fadeIn(audio)).catch(() => console.log("La música necesita interacción"));
+    audio.play().then(() => fadeIn(audio)).catch(() => console.log("Interacción necesaria para música"));
 
-    mostrarImagen(); // mostrar imagen sin mezclar
+    mostrarImagen(); // mostrar imagen completa sin mezclar
 }
 
 // --- FADE-IN ---
@@ -92,7 +109,6 @@ function fadeIn(audio,target=0.5,step=0.02,intervalMs=150){
 
 // --- MEZCLAR PIEZAS ---
 function mezclarPiezas(){
-    // 1000 movimientos aleatorios
     for(let i=0;i<1000;i++){
         const adyacentes = piezas.filter(p=> esAdyacenteVacia(p));
         const mover = adyacentes[Math.floor(Math.random()*adyacentes.length)];
@@ -121,7 +137,7 @@ function moverPieza(pieza, redraw=true){
     }
 }
 
-// --- CLIC O TOUCH ---
+// --- CLIC / TOUCH ---
 function manejarClick(e){
     const rect = canvas.getBoundingClientRect();
     const xClick = (e.clientX||e.touches[0].clientX) - rect.left;
@@ -148,8 +164,13 @@ function verificarPuzzleCompleto(){
     if(completo) document.getElementById("mensaje").innerText="¡Felicidades! 💖 Puzzle completado";
 }
 
+// --- SIGUIENTE IMAGEN ---
+function siguienteImagen(){
+    mostrarImagen();
+}
+
 // --- EVENTOS ---
-window.addEventListener('resize',()=>{ if(document.getElementById("juego").style.display==="block") mostrarImagen(indiceActual); });
+window.addEventListener('resize',()=>{ if(document.getElementById("juego").style.display==="block") dibujarPiezas(); });
 canvas = document.getElementById("puzzleCanvas");
 canvas.addEventListener('click', manejarClick);
 canvas.addEventListener('touchstart', e=>{ e.preventDefault(); manejarClick(e); });
