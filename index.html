@@ -1,42 +1,48 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nuestro amor entre piezas ❤️</title>
-<link rel="stylesheet" href="style.css">
-</head>
+  <meta charset="utf-8" />
+  <title>Nuestro amor entre piezas ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  images.json
+  <link rel="/head>
 <body>
-
-<!-- VIDEO DE PORTADA -->
-<div id="menu">
+  <!-- MENÚ PRINCIPAL CON VIDEO DE FONDO -->
+  <section id="menu" aria-label="Menú principal">
     <video id="videoPortada" autoplay muted loop playsinline>
-        <source src="Portada.mp4" type="video/mp4">
-        Tu navegador no soporta videos HTML5
+      media/portada.mp4
+      Tu navegador no soporta videos HTML5
     </video>
 
-    <div id="menu-overlay">
-        <h1>Nuestro amor entre piezas ❤️</h1>
-        <select id="dificultad">
-            <option value="3">Fácil (3x3)</option>
-            <option value="4">Medio (4x4)</option>
-            <option value="5">Difícil (5x5)</option>
-        </select>
-        <button onclick="iniciarJuego()">Comenzar</button>
-    </div>
-</div>
+    <div id="menu-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo">
+      <h1 id="titulo">Nuestro amor entre piezas ❤️</h1>
 
-<!-- ZONA DEL JUEGO -->
-<div id="juego" style="display:none;">
-    <h2 id="tituloImagen"></h2>
-    <canvas id="puzzleCanvas"></canvas>
+      <label for="dificultad">Dificultad</label>
+      <select id="dificultad" aria-label="Seleccionar dificultad">
+        <option value="3">Fácil (3x3)</option>
+        <option value="4">Medio (4x4)</option>
+        <option value="5">Difícil (5x5)</option>
+      </select>
+
+      <button id="btnComenzar" type="button">Comenzar</button>
+
+      <p class="hint">Consejo: si no ves imágenes en PC, sirve la app desde un servidor local (evita file://).</p>
+
+      <!-- Collage decorativo (no interactivo) -->
+      <div id="collage" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- ZONA DE JUEGO -->
+  <section id="juego" hidden aria-label="Zona de juego">
     <div class="controls">
-        <button onclick="mezclarPiezas()">Mezclar</button>
-        <button onclick="siguienteImagen()">Siguiente imagen</button>
+      <button id="btnMezclar" type="button">Mezclar</button>
+      <button id="btnSiguiente" type="button">Siguiente imagen</button>
     </div>
-    <p id="mensaje"></p>
-</div>
 
-<script src="script.js"></script>
-</body>
-</html>
+    <canvas id="puzzleCanvas" width="600" height="600" aria-label="Rompecabezas"></canvas>
+    <p id="mensaje" role="status" aria-live="polite"></p>
+  </section>
+
+  <!-- Audio de fondo: se activa tras la primera interacción (botón Comenzar) -->
+  <audio id="musica" src="audio/musica.mp3" preload="auto" loop></audio
