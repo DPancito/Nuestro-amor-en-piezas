@@ -1,273 +1,188 @@
-/* eslint-env browser */
-'use strict';
+// --- MÚSICA ---
+function fadeIn(audio, target = 0.5, step = 0.02, intervalMs = 150) {
+    audio.volume = 0;
+    const iv = setInterval(() => {
+        audio.volume = Math.min(audio.volume + step, target);
+        if (audio.volume >= target) clearInterval(iv);
+    }, intervalMs);
+}
 
-/* ------------------ Estado global ------------------ */
+function reproducirMusicaUnaHora() {
+    const audio = document.getElementById('musica');
+    // Enlace directo de Google Drive
+    audio.src = "https://drive.google.com/uc?export=download&id=1Y54P-U7ovvoRYXS6FxHMwrfW-E8ZOCRj";
+    audio.currentTime = Math.random() * Math.max(1, audio.duration - 10 || 3600);
+    audio.play().then(() => fadeIn(audio)).catch(err => console.warn('Autoplay bloqueado', err));
+}
+
+// --- PUZZLE ---
+let canvas = document.getElementById("puzzleCanvas");
+let ctx = canvas.getContext("2d");
+let img = new Image();
+let rows = 3, cols = 3;
+let puzzle = [];
+let tileSize;
+let empty = {x:0, y:0};
+let indiceImagen = 0;
 let imagenes = [];
-let indiceActual = 0;
-let filas = 3;
-let columnas = 3;
 
-let canvas, ctx;
-let piezas = [];                    // piezas con {sx,sy,sw,sh, x,y, ox,oy}
-let piezaVacia = { x: null, y: null };
-let imgActual = new Image();
-
-/* ------------------ Utilidades ------------------ */
-const $ = (sel) => document.querySelector(sel);
-const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-
-function ajustarCanvas() {
-  // Ajusta el canvas a un cuadrado en función de la ventana
-  const size = Math.floor(Math.min(window.innerWidth, window.innerHeight) * 0.9);
-  canvas.width = size;
-  canvas.height = size;
+// --- Cargar imágenes ---
+async function cargarImagenes() {
+    const resp = await fetch("images.json");
+    imagenes = await resp.json();
+    cargarImagenActual();
 }
 
-function fadeIn(audio, target = 0.5, step = 0.04, intervalMs = 120) {
-  target = clamp(target, 0, 1);
-  const iv = setInterval(() => {
-    audio.volume = Math.min(audio.volume + step, target);
-    if (audio.volume >= target) clearInterval(iv);
-  }, intervalMs);
+function cargarImagenActual() {
+    img.src = "images/" + imagenes[indiceImagen];
+    img.onload = () => {
+        iniciarPuzzle();
+        fadeCanvas();
+    };
 }
 
-/* ------------------ Carga inicial ------------------ */
-document.addEventListener('DOMContentLoaded', async () => {
-  canvas = $('#puzzleCanvas');
-  ctx = canvas.getContext('2d', { alpha: true });
+function siguienteImagen() {
+    indiceImagen = (indiceImagen +1) % imagenes.length;
+    cargarImagenActual();
+}
 
-  bindUI();
-  await cargarCatalogoImagenes();
-  crearCollage(); // decorativo
+// --- Inicializar puzzle ---
+function iniciarPuzzle() {
+    rows = parseInt(document.getElementById("dificultad").value);
+    cols = rows;
+    puzzle = [];
+    tileSize = canvas.width / cols;
 
-  // Activar música en el MENÚ tras la primera interacción (PC/móvil)
-  const audio = $('#musica');
-  const tryStartMusicOnce = async () => {
-    if (!audio || !audio.paused) return;
-    try {
-      audio.volume = 0;
-      audio.currentTime = 0;
-      await audio.play();
-      fadeIn(audio, 0.5);
-      window.removeEventListener('pointerdown', tryStartMusicOnce);
-      window.removeEventListener('keydown', tryStartMusicOnce);
-    } catch (e) {
-      // Si no se puede, se intentará de nuevo en la siguiente interacción
+    for(let y=0; y<rows; y++){
+        puzzle[y]=[];
+        for(let x=0; x<cols; x++){
+            puzzle[y][x]={x:x, y:y};
+        }
     }
-  };
-  window.addEventListener('pointerdown', tryStartMusicOnce, { once: false });
-  window.addEventListener('keydown', tryStartMusicOnce, { once: false });
+
+    empty = {x:cols-1, y:rows-1};
+    puzzle[empty.y][empty.x] = null;
+
+    dibujarPuzzle();
+}
+
+// --- Dibujar puzzle ---
+function dibujarPuzzle() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(let y=0; y<rows; y++){
+        for(let x=0; x<cols; x++){
+            const tile = puzzle[y][x];
+            if(tile){
+                ctx.drawImage(img, tile.x*tileSize, tile.y*tileSize, tileSize, tileSize,
+                    x*tileSize, y*tileSize, tileSize, tileSize);
+            } else {
+                ctx.fillStyle = "black";
+                ctx.fillRect(x*tileSize, y*tileSize, tileSize, tileSize);
+            }
+            ctx.strokeStyle = "white";
+            ctx.strokeRect(x*tileSize, y*tileSize, tileSize, tileSize);
+        }
+    }
+}
+
+// --- Mezclar puzzle ---
+function mezclar() {
+    let moves = rows*cols*10;
+    for(let i=0;i<moves;i++){
+        let vecinos = obtenerVecinos();
+        let mover = vecinos[Math.floor(Math.random()*vecinos.length)];
+        moverPieza(mover.x, mover.y);
+    }
+}
+
+function obtenerVecinos() {
+    const vecinos=[];
+    if(empty.x>0) vecinos.push({x:empty.x-1, y:empty.y});
+    if(empty.x<cols-1) vecinos.push({x:empty.x+1, y:empty.y});
+    if(empty.y>0) vecinos.push({x:empty.x, y:empty.y-1});
+    if(empty.y<rows-1) vecinos.push({x:empty.x, y:empty.y+1});
+    return vecinos;
+}
+
+function moverPieza(x,y) {
+    puzzle[empty.y][empty.x] = puzzle[y][x];
+    puzzle[y][x] = null;
+    empty.x = x;
+    empty.y = y;
+    dibujarPuzzle();
+    if(verificarCompleto()) mostrarVale();
+}
+
+// --- Verificar puzzle ---
+function verificarCompleto() {
+    for(let y=0;y<rows;y++){
+        for(let x=0;x<cols;x++){
+            const tile=puzzle[y][x];
+            if(tile && (tile.x!==x || tile.y!==y)) return false;
+        }
+    }
+    return true;
+}
+
+// --- Vales sorpresa ---
+const vales = [
+    "💋 Un beso especial",
+    "🌹 Una cita romántica",
+    "🎁 Una sorpresa dulce",
+    "💌 Un mensaje de amor",
+    "🍫 Chocolate para ti"
+];
+
+function mostrarVale() {
+    const msg = document.getElementById("mensaje");
+    msg.textContent = vales[Math.floor(Math.random()*vales.length)];
+    msg.style.opacity = 1;
+    setTimeout(()=> msg.style.opacity=0, 4000);
+    crearCorazones(5);
+}
+
+// --- Corazones ---
+function crearCorazones(cantidad=5){
+    for(let i=0;i<cantidad;i++){
+        const heart = document.createElement("div");
+        heart.className="heart";
+        heart.style.left = Math.random()*canvas.width+"px";
+        heart.style.top = canvas.offsetTop + canvas.height + "px";
+        heart.style.animationDuration = (3 + Math.random()*2) + "s";
+        document.body.appendChild(heart);
+        setTimeout(()=> heart.remove(), 3000);
+    }
+}
+
+// --- Fade entre imágenes ---
+function fadeCanvas(){
+    canvas.style.opacity=0;
+    let op=0;
+    const step=0.02;
+    const interval=setInterval(()=>{
+        op+=step;
+        canvas.style.opacity=op;
+        if(op>=1) clearInterval(interval);
+    },30);
+}
+
+// --- Click en puzzle ---
+canvas.addEventListener("click", function(e){
+    const rect=canvas.getBoundingClientRect();
+    const x=Math.floor((e.clientX-rect.left)/tileSize);
+    const y=Math.floor((e.clientY-rect.top)/tileSize);
+    const dx=Math.abs(x-empty.x);
+    const dy=Math.abs(y-empty.y);
+    if((dx===1 && dy===0)||(dx===0 && dy===1)) moverPieza(x,y);
 });
 
-/* ------------------ UI & eventos ------------------ */
-function bindUI() {
-  $('#btnComenzar').addEventListener('click', () => iniciarJuego());
-  $('#btnMezclar').addEventListener('click', () => mezclarPiezas());
-  $('#btnSiguiente').addEventListener('click', () => siguienteImagen());
+// --- Eventos ---
+document.getElementById("btnIniciar").addEventListener("click", ()=>{
+    document.getElementById("pantalla-inicio").classList.add("oculto");
+    document.getElementById("contenedor").classList.remove("oculto");
+    reproducirMusicaUnaHora();
+    cargarImagenes();
+});
 
-  // Interacción unificada: Pointer Events (evita doble disparo click + touch)
-  canvas.addEventListener('pointerup', manejarPointerUp, { passive: true });
-
-  // Redibuja al redimensionar
-  window.addEventListener('resize', () => {
-    if (!$('#juego').hasAttribute('hidden')) {
-      ajustarCanvas();
-      dibujarPiezas(true);
-    }
-  });
-}
-
-/* ------------------ Carga del catálogo ------------------ */
-async function cargarCatalogoImagenes() {
-  try {
-    const res = await fetch('images.json', { cache: 'no-store' });
-    imagenes = await res.json();
-  } catch (err) {
-    console.error('No se pudo cargar images.json. Verifica que exista en la raíz del repo.', err);
-    imagenes = []; // fallback
-  }
-}
-
-/* ------------------ Collage decorativo ------------------ */
-function crearCollage() {
-  const collageDiv = $('#collage');
-  if (!collageDiv) return;
-  collageDiv.innerHTML = '';
-
-  if (!Array.isArray(imagenes) || imagenes.length === 0) return;
-
-  const seleccionadas = [];
-  while (seleccionadas.length < Math.min(25, imagenes.length)) {
-    const rand = imagenes[Math.floor(Math.random() * imagenes.length)];
-    if (!seleccionadas.includes(rand)) seleccionadas.push(rand);
-  }
-  for (const src of seleccionadas) {
-    const img = document.createElement('img');
-    img.decoding = 'async';
-    img.loading = 'lazy';
-    img.src = `images/${src}`;
-    collageDiv.appendChild(img);
-  }
-}
-
-/* ------------------ Flujo de juego ------------------ */
-function iniciarJuego() {
-  // Leer dificultad
-  const val = parseInt($('#dificultad').value, 10);
-  filas = columnas = isNaN(val) ? 3 : clamp(val, 3, 10);
-
-  // Mostrar/ocultar pantallas
-  $('#menu').setAttribute('hidden', '');
-  $('#juego').removeAttribute('hidden');
-
-  // Si por alguna razón la música no arrancó aún, inténtalo ahora
-  const audio = $('#musica');
-  if (audio && audio.paused) {
-    audio.volume = 0;
-    audio.currentTime = 0;
-    audio.play().then(() => fadeIn(audio, 0.5)).catch(() => {});
-  }
-
-  // Preparar canvas y mostrar una imagen completa (sin hueco)
-  ajustarCanvas();
-  mostrarImagen();
-}
-
-function mostrarImagen(indice = null) {
-  if (!Array.isArray(imagenes) || imagenes.length === 0) {
-    // No hay catálogo; limpia y avisa
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    $('#mensaje').textContent = 'No se encontraron imágenes (verifica images.json y la carpeta /images).';
-    return;
-  }
-
-  if (indice === null) indice = Math.floor(Math.random() * imagenes.length);
-  indiceActual = indice;
-
-  // Cargar imagen
-  imgActual = new Image();
-  imgActual.decoding = 'async';
-  imgActual.onload = () => {
-    // Crear piezas ordenadas (estado resuelto)
-    piezas = [];
-    piezaVacia.x = columnas - 1;
-    piezaVacia.y = filas - 1;
-
-    const sw = imgActual.width / columnas;
-    const sh = imgActual.height / filas;
-
-    for (let i = 0; i < filas; i++) {
-      for (let j = 0; j < columnas; j++) {
-        piezas.push({
-          // Región de origen en la imagen
-          sx: j * sw,
-          sy: i * sh,
-          sw, sh,
-          // Posición actual en la grilla (empieza resuelto)
-          x: j,
-          y: i,
-          // Posición objetivo (para verificación)
-          ox: j,
-          oy: i
-        });
-      }
-    }
-
-    // Dibuja imagen completa (sin hueco) para “previsualizar”
-    dibujarPiezas(false);
-    // Limpia mensaje
-    $('#mensaje').textContent = '';
-  };
-  imgActual.src = `images/${imagenes[indice]}`;
-}
-
-function dibujarPiezas(mostrarVacio = true) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  const ancho = canvas.width / columnas;
-  const alto  = canvas.height / filas;
-
-  for (const p of piezas) {
-    // Si esta celda coincide con el hueco y queremos mostrarlo, pinta el hueco
-    if (mostrarVacio && p.x === piezaVacia.x && p.y === piezaVacia.y) {
-      ctx.fillStyle = '#000';
-      ctx.fillRect(p.x * ancho, p.y * alto, ancho, alto);
-      continue;
-    }
-
-    // Dibuja el fragmento de imagen correspondiente
-    ctx.drawImage(
-      imgActual,
-      p.sx, p.sy, p.sw, p.sh,
-      p.x * ancho, p.y * alto, ancho, alto
-    );
-  }
-}
-
-/* Mezcla mediante 1000 movimientos válidos del hueco (siempre alcanzable) */
-function mezclarPiezas() {
-  if (!piezas.length) return;
-
-  for (let i = 0; i < 1000; i++) {
-    const adyacentes = piezas.filter((p) => esAdyacenteVacia(p));
-    const mover = adyacentes[Math.floor(Math.random() * adyacentes.length)];
-    moverPieza(mover, false);
-  }
-  dibujarPiezas(true);
-  $('#mensaje').textContent = '';
-}
-
-/* Determina si la pieza es adyacente al hueco */
-function esAdyacenteVacia(p) {
-  const dx = Math.abs(p.x - piezaVacia.x);
-  const dy = Math.abs(p.y - piezaVacia.y);
-  return (dx + dy) === 1;
-}
-
-/* Intercambia la pieza con el hueco */
-function moverPieza(pieza, redraw = true) {
-  if (!pieza) return;
-  if (esAdyacenteVacia(pieza)) {
-    const tx = pieza.x, ty = pieza.y;
-    pieza.x = piezaVacia.x;
-    pieza.y = piezaVacia.y;
-    piezaVacia.x = tx;
-    piezaVacia.y = ty;
-    if (redraw) dibujarPiezas(true);
-  }
-}
-
-/* Pointer handler (click/touch unificados) */
-function manejarPointerUp(e) {
-  const rect = canvas.getBoundingClientRect();
-  const xClick = e.clientX - rect.left;
-  const yClick = e.clientY - rect.top;
-
-  const ancho = canvas.width / columnas;
-  const alto  = canvas.height / filas;
-
-  const xPieza = Math.floor(xClick / ancho);
-  const yPieza = Math.floor(yClick / alto);
-
-  const pieza = piezas.find((p) => p.x === xPieza && p.y === yPieza);
-  // No intentes mover “el hueco”
-  if (pieza && !(pieza.x === piezaVacia.x && pieza.y === piezaVacia.y)) {
-    moverPieza(pieza);
-    verificarPuzzleCompleto();
-  }
-}
-
-/* Verifica si todas las piezas (excepto el hueco) están en su lugar objetivo */
-function verificarPuzzleCompleto() {
-  const completo = piezas.every((p) => p.x === p.ox && p.y === p.oy) &&
-                   piezaVacia.x === (columnas - 1) && piezaVacia.y === (filas - 1);
-
-  if (completo) {
-    $('#mensaje').textContent = '¡Felicidades! 💖 Puzzle completado';
-  }
-}
-
-/* Cambia a otra imagen y reinicia estado */
-function siguienteImagen() {
-  mostrarImagen();
-}
+document.getElementById("btnMezclar").addEventListener("click", mezclar);
+document.getElementById("btnSiguiente").addEventListener("click", siguienteImagen);
