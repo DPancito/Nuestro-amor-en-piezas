@@ -1,188 +1,179 @@
-// --- MÚSICA ---
-function fadeIn(audio, target = 0.5, step = 0.02, intervalMs = 150) {
-    audio.volume = 0;
-    const iv = setInterval(() => {
-        audio.volume = Math.min(audio.volume + step, target);
-        if (audio.volume >= target) clearInterval(iv);
-    }, intervalMs);
-}
-
-function reproducirMusicaUnaHora() {
-    const audio = document.getElementById('musica');
-    // Enlace directo de Google Drive
-    audio.src = "https://drive.google.com/uc?export=download&id=1Y54P-U7ovvoRYXS6FxHMwrfW-E8ZOCRj";
-    audio.currentTime = Math.random() * Math.max(1, audio.duration - 10 || 3600);
-    audio.play().then(() => fadeIn(audio)).catch(err => console.warn('Autoplay bloqueado', err));
-}
-
-// --- PUZZLE ---
-let canvas = document.getElementById("puzzleCanvas");
-let ctx = canvas.getContext("2d");
-let img = new Image();
-let rows = 3, cols = 3;
-let puzzle = [];
-let tileSize;
-let empty = {x:0, y:0};
-let indiceImagen = 0;
 let imagenes = [];
+let indiceActual = 0;
+let filas = 3;
+let columnas = 3;
+let canvas, ctx;
+let piezas = [];
+let piezaVacia;
+let imgActual = new Image();
 
-// --- Cargar imágenes ---
-async function cargarImagenes() {
-    const resp = await fetch("images.json");
-    imagenes = await resp.json();
-    cargarImagenActual();
-}
+// --- CARGAR IMÁGENES ---
+fetch('images.json')
+  .then(res => res.json())
+  .then(data => {
+    imagenes = data;
+    crearCollage();
+  });
 
-function cargarImagenActual() {
-    img.src = "images/" + imagenes[indiceImagen];
-    img.onload = () => {
-        iniciarPuzzle();
-        fadeCanvas();
-    };
-}
-
-function siguienteImagen() {
-    indiceImagen = (indiceImagen +1) % imagenes.length;
-    cargarImagenActual();
-}
-
-// --- Inicializar puzzle ---
-function iniciarPuzzle() {
-    rows = parseInt(document.getElementById("dificultad").value);
-    cols = rows;
-    puzzle = [];
-    tileSize = canvas.width / cols;
-
-    for(let y=0; y<rows; y++){
-        puzzle[y]=[];
-        for(let x=0; x<cols; x++){
-            puzzle[y][x]={x:x, y:y};
-        }
+// --- CREAR COLLAGE 5x5 ---
+function crearCollage() {
+    const collageDiv = document.getElementById("collage");
+    collageDiv.innerHTML = '';
+    const seleccionadas = [];
+    while(seleccionadas.length < 25){
+        const rand = imagenes[Math.floor(Math.random()*imagenes.length)];
+        if(!seleccionadas.includes(rand)) seleccionadas.push(rand);
     }
-
-    empty = {x:cols-1, y:rows-1};
-    puzzle[empty.y][empty.x] = null;
-
-    dibujarPuzzle();
+    seleccionadas.forEach(src => {
+        const img = document.createElement("img");
+        img.src = `images/${src}`;
+        collageDiv.appendChild(img);
+    });
 }
 
-// --- Dibujar puzzle ---
-function dibujarPuzzle() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    for(let y=0; y<rows; y++){
-        for(let x=0; x<cols; x++){
-            const tile = puzzle[y][x];
-            if(tile){
-                ctx.drawImage(img, tile.x*tileSize, tile.y*tileSize, tileSize, tileSize,
-                    x*tileSize, y*tileSize, tileSize, tileSize);
-            } else {
-                ctx.fillStyle = "black";
-                ctx.fillRect(x*tileSize, y*tileSize, tileSize, tileSize);
+// --- AJUSTAR CANVAS ---
+function ajustarCanvas() {
+    canvas = document.getElementById("puzzleCanvas");
+    ctx = canvas.getContext("2d");
+    const tamaño = Math.min(window.innerWidth, window.innerHeight) * 0.9;
+    canvas.width = tamaño;
+    canvas.height = tamaño;
+}
+
+// --- MOSTRAR IMAGEN ---
+function mostrarImagen(indice = null) {
+    if (indice === null) indice = Math.floor(Math.random() * imagenes.length);
+    indiceActual = indice;
+    imgActual.src = `images/${imagenes[indice]}`;
+    imgActual.onload = () => {
+        ajustarCanvas();
+        piezas = [];
+        const piezaAncho = canvas.width / columnas;
+        const piezaAlto = canvas.height / filas;
+
+        for (let i = 0; i < filas; i++) {
+            for (let j = 0; j < columnas; j++) {
+                const esVacia = (i === filas - 1 && j === columnas - 1);
+                piezas.push({
+                    sx: j * (imgActual.width / columnas),
+                    sy: i * (imgActual.height / filas),
+                    sw: imgActual.width / columnas,
+                    sh: imgActual.height / filas,
+                    x: j,
+                    y: i,
+                    empty: esVacia
+                });
+                if (esVacia) piezaVacia = {x:j, y:i};
             }
-            ctx.strokeStyle = "white";
-            ctx.strokeRect(x*tileSize, y*tileSize, tileSize, tileSize);
         }
+        dibujarPiezas();
     }
 }
 
-// --- Mezclar puzzle ---
-function mezclar() {
-    let moves = rows*cols*10;
-    for(let i=0;i<moves;i++){
-        let vecinos = obtenerVecinos();
-        let mover = vecinos[Math.floor(Math.random()*vecinos.length)];
-        moverPieza(mover.x, mover.y);
-    }
-}
-
-function obtenerVecinos() {
-    const vecinos=[];
-    if(empty.x>0) vecinos.push({x:empty.x-1, y:empty.y});
-    if(empty.x<cols-1) vecinos.push({x:empty.x+1, y:empty.y});
-    if(empty.y>0) vecinos.push({x:empty.x, y:empty.y-1});
-    if(empty.y<rows-1) vecinos.push({x:empty.x, y:empty.y+1});
-    return vecinos;
-}
-
-function moverPieza(x,y) {
-    puzzle[empty.y][empty.x] = puzzle[y][x];
-    puzzle[y][x] = null;
-    empty.x = x;
-    empty.y = y;
-    dibujarPuzzle();
-    if(verificarCompleto()) mostrarVale();
-}
-
-// --- Verificar puzzle ---
-function verificarCompleto() {
-    for(let y=0;y<rows;y++){
-        for(let x=0;x<cols;x++){
-            const tile=puzzle[y][x];
-            if(tile && (tile.x!==x || tile.y!==y)) return false;
+// --- DIBUJAR PIEZAS ---
+function dibujarPiezas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const ancho = canvas.width / columnas;
+    const alto = canvas.height / filas;
+    piezas.forEach(p => {
+        if(!p.empty){
+            ctx.drawImage(imgActual, p.sx, p.sy, p.sw, p.sh, p.x*ancho, p.y*alto, ancho, alto);
+        } else {
+            ctx.fillStyle = "#000";
+            ctx.fillRect(p.x*ancho, p.y*alto, ancho, alto);
         }
+    });
+}
+
+// --- INICIAR JUEGO ---
+function iniciarJuego() {
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("juego").style.display = "block";
+
+    filas = columnas = parseInt(document.getElementById("dificultad").value);
+
+    // Música
+    const audio = document.getElementById("musica");
+    audio.currentTime = Math.random() * Math.max(1, audio.duration || 3600 - 10);
+    audio.volume = 0;
+    audio.play().then(() => fadeIn(audio)).catch(() => console.log("Interacción necesaria para música"));
+
+    mostrarImagen(); // imagen completa sin mezclar
+}
+
+// --- FADE-IN ---
+function fadeIn(audio,target=0.5,step=0.02,intervalMs=150){
+    const iv = setInterval(()=>{
+        audio.volume = Math.min(audio.volume + step,target);
+        if(audio.volume>=target) clearInterval(iv);
+    },intervalMs);
+}
+
+// --- MEZCLAR PIEZAS ---
+function mezclarPiezas(){
+    for(let i=0;i<1000;i++){
+        const adyacentes = piezas.filter(p=> esAdyacenteVacia(p));
+        const mover = adyacentes[Math.floor(Math.random()*adyacentes.length)];
+        moverPieza(mover,false);
     }
-    return true;
+    dibujarPiezas();
 }
 
-// --- Vales sorpresa ---
-const vales = [
-    "💋 Un beso especial",
-    "🌹 Una cita romántica",
-    "🎁 Una sorpresa dulce",
-    "💌 Un mensaje de amor",
-    "🍫 Chocolate para ti"
-];
-
-function mostrarVale() {
-    const msg = document.getElementById("mensaje");
-    msg.textContent = vales[Math.floor(Math.random()*vales.length)];
-    msg.style.opacity = 1;
-    setTimeout(()=> msg.style.opacity=0, 4000);
-    crearCorazones(5);
+// --- PIEZA ADYACENTE ---
+function esAdyacenteVacia(p){
+    const dx = Math.abs(p.x - piezaVacia.x);
+    const dy = Math.abs(p.y - piezaVacia.y);
+    return (dx+dy)===1;
 }
 
-// --- Corazones ---
-function crearCorazones(cantidad=5){
-    for(let i=0;i<cantidad;i++){
-        const heart = document.createElement("div");
-        heart.className="heart";
-        heart.style.left = Math.random()*canvas.width+"px";
-        heart.style.top = canvas.offsetTop + canvas.height + "px";
-        heart.style.animationDuration = (3 + Math.random()*2) + "s";
-        document.body.appendChild(heart);
-        setTimeout(()=> heart.remove(), 3000);
+// --- MOVER PIEZA ---
+function moverPieza(pieza, redraw=true){
+    if(esAdyacenteVacia(pieza)){
+        const tempX = pieza.x;
+        const tempY = pieza.y;
+        pieza.x = piezaVacia.x;
+        pieza.y = piezaVacia.y;
+        piezaVacia.x = tempX;
+        piezaVacia.y = tempY;
+        if(redraw) dibujarPiezas();
     }
 }
 
-// --- Fade entre imágenes ---
-function fadeCanvas(){
-    canvas.style.opacity=0;
-    let op=0;
-    const step=0.02;
-    const interval=setInterval(()=>{
-        op+=step;
-        canvas.style.opacity=op;
-        if(op>=1) clearInterval(interval);
-    },30);
+// --- CLIC / TOUCH ---
+function manejarClick(e){
+    const rect = canvas.getBoundingClientRect();
+    const xClick = (e.clientX||e.touches[0].clientX) - rect.left;
+    const yClick = (e.clientY||e.touches[0].clientY) - rect.top;
+    const ancho = canvas.width / columnas;
+    const alto = canvas.height / filas;
+    const xPieza = Math.floor(xClick / ancho);
+    const yPieza = Math.floor(yClick / alto);
+
+    const pieza = piezas.find(p=>p.x===xPieza && p.y===yPieza);
+    if(pieza && !pieza.empty){
+        moverPieza(pieza);
+        verificarPuzzleCompleto();
+    }
 }
 
-// --- Click en puzzle ---
-canvas.addEventListener("click", function(e){
-    const rect=canvas.getBoundingClientRect();
-    const x=Math.floor((e.clientX-rect.left)/tileSize);
-    const y=Math.floor((e.clientY-rect.top)/tileSize);
-    const dx=Math.abs(x-empty.x);
-    const dy=Math.abs(y-empty.y);
-    if((dx===1 && dy===0)||(dx===0 && dy===1)) moverPieza(x,y);
-});
+// --- VERIFICAR COMPLETADO ---
+function verificarPuzzleCompleto(){
+    let completo = piezas.every((p,i)=>{
+        const fila = Math.floor(i/columnas);
+        const col = i%columnas;
+        return p.x===col && p.y===fila;
+    });
+    if(completo) document.getElementById("mensaje").innerText="¡Felicidades! 💖 Puzzle completado";
+}
 
-// --- Eventos ---
-document.getElementById("btnIniciar").addEventListener("click", ()=>{
-    document.getElementById("pantalla-inicio").classList.add("oculto");
-    document.getElementById("contenedor").classList.remove("oculto");
-    reproducirMusicaUnaHora();
-    cargarImagenes();
-});
+// --- SIGUIENTE IMAGEN ---
+function siguienteImagen(){
+    mostrarImagen();
+}
 
-document.getElementById("btnMezclar").addEventListener("click", mezclar);
-document.getElementById("btnSiguiente").addEventListener("click", siguienteImagen);
+// --- EVENTOS ---
+window.addEventListener('resize',()=>{ if(document.getElementById("juego").style.display==="block") dibujarPiezas(); });
+canvas = document.getElementById("puzzleCanvas");
+canvas.addEventListener('click', manejarClick);
+canvas.addEventListener('touchstart', e=>{ e.preventDefault(); manejarClick(e); });
+
