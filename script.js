@@ -39,6 +39,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   bindUI();
   await cargarCatalogoImagenes();
   crearCollage(); // decorativo
+
+  // Activar música en el MENÚ tras la primera interacción (PC/móvil)
+  const audio = $('#musica');
+  const tryStartMusicOnce = async () => {
+    if (!audio || !audio.paused) return;
+    try {
+      audio.volume = 0;
+      audio.currentTime = 0;
+      await audio.play();
+      fadeIn(audio, 0.5);
+      window.removeEventListener('pointerdown', tryStartMusicOnce);
+      window.removeEventListener('keydown', tryStartMusicOnce);
+    } catch (e) {
+      // Si no se puede, se intentará de nuevo en la siguiente interacción
+    }
+  };
+  window.addEventListener('pointerdown', tryStartMusicOnce, { once: false });
+  window.addEventListener('keydown', tryStartMusicOnce, { once: false });
 });
 
 /* ------------------ UI & eventos ------------------ */
@@ -65,8 +83,8 @@ async function cargarCatalogoImagenes() {
     const res = await fetch('images.json', { cache: 'no-store' });
     imagenes = await res.json();
   } catch (err) {
-    console.error('No se pudo cargar images.json. ¿Estás abriendo por file://?', err);
-    imagenes = []; // en caso extremo, queda vacío
+    console.error('No se pudo cargar images.json. Verifica que exista en la raíz del repo.', err);
+    imagenes = []; // fallback
   }
 }
 
@@ -102,20 +120,12 @@ function iniciarJuego() {
   $('#menu').setAttribute('hidden', '');
   $('#juego').removeAttribute('hidden');
 
-  // Audio: permitido tras esta interacción
+  // Si por alguna razón la música no arrancó aún, inténtalo ahora
   const audio = $('#musica');
-  if (audio) {
-    try {
-      audio.volume = 0;
-      // Si el navegador aún no conoce duration, arranca desde 0 de forma segura
-      audio.currentTime = 0;
-      audio.play().then(() => fadeIn(audio, 0.5)).catch(() => {
-        // Si falla igualmente, el usuario podrá reproducir manualmente con controles propios
-        console.warn('No se pudo reproducir el audio sin interacción adicional.');
-      });
-    } catch (e) {
-      console.warn('Audio no disponible:', e);
-    }
+  if (audio && audio.paused) {
+    audio.volume = 0;
+    audio.currentTime = 0;
+    audio.play().then(() => fadeIn(audio, 0.5)).catch(() => {});
   }
 
   // Preparar canvas y mostrar una imagen completa (sin hueco)
@@ -261,5 +271,3 @@ function verificarPuzzleCompleto() {
 function siguienteImagen() {
   mostrarImagen();
 }
-
-/* ---------------------------------------------------- */
