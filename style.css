@@ -1,165 +1,114 @@
-/* Reset y tipografía básica */
-* { box-sizing: border-box; }
-html, body { height: 100%; }
+/* Reset y cuerpo */
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  color: #003B7C;
-  background: #fff;
-  overflow-x: hidden;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
 }
 
-/* MENÚ PRINCIPAL */
+/* MENU PRINCIPAL CON VIDEO */
 #menu {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
 #videoPortada {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
-  /* Clave: el video NO captura clics; así los botones funcionan en PC */
-  pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Mantener proporción y cubrir pantalla */
+    transform: translate(-50%, -50%);
+    z-index: 1;
 }
 
-/* Overlay de controles sobre el video */
+/* SUPERPOSICIÓN DE BOTONES Y TEXTO */
 #menu-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  color: #fff;
-  text-align: center;
-  padding: 20px 28px;
-  border-radius: 16px;
-  backdrop-filter: blur(6px);
-  background: rgba(255, 182, 193, 0.22);
-  /* El overlay SÍ recibe eventos */
-  pointer-events: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    color: #fff;
+    text-align: center;
+    backdrop-filter: blur(5px); /* Sutil efecto de difuminado */
+    padding: 20px 30px;
+    border-radius: 15px;
+    background: rgba(255, 182, 193, 0.2); /* Rosa sutil */
 }
 
 #menu-overlay h1 {
-  margin: 0 0 6px;
-  font-size: clamp(1.2rem, 2.6vw, 2rem);
-  text-shadow: 2px 2px 8px rgba(0,0,0,.45);
+    font-size: 2em;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    margin: 0;
 }
 
-#menu-overlay .hint {
-  margin: 6px 0 0;
-  font-size: .9rem;
-  color: #f4f8ff;
-  opacity: .9;
-}
-
+/* SELECTOR Y BOTONES */
 #menu-overlay select,
 #menu-overlay button {
-  font-size: 1rem;
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  transition: transform .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
 }
 
 #menu-overlay select {
-  background: rgba(255, 192, 203, 0.7);
-  color: #003B7C;
+    background: rgba(255, 192, 203, 0.7); /* rosa ligero */
+    color: #003B7C;
 }
 
 #menu-overlay select:hover {
-  background: rgba(255, 182, 193, 0.9);
+    background: rgba(255, 182, 193, 0.9);
 }
 
 #menu-overlay button {
-  background: linear-gradient(135deg, #ffb6c1, #ff69b4);
-  color: #fff;
-  font-weight: 700;
-  box-shadow: 0 4px 8px rgba(0,0,0,.28);
+    background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+    color: #fff;
+    font-weight: bold;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
 }
 
 #menu-overlay button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,.36);
+    transform: translateY(-2px);
+    box-shadow: 0px 6px 12px rgba(0,0,0,0.4);
 }
 
-/* Collage decorativo */
-#collage {
-  display: grid;
-  grid-template-columns: repeat(5, min(12vw, 90px));
-  grid-auto-rows: min(12vw, 90px);
-  gap: 6px;
-  margin-top: 8px;
-  max-width: 92vw;
-  justify-content: center;
-}
-
-#collage img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
-  filter: drop-shadow(0 2px 2px rgba(0,0,0,.25));
-  user-select: none;
-  pointer-events: none; /* decorativo */
-}
-
-/* ZONA DE JUEGO */
-#juego {
-  padding: 12px 12px 24px;
+/* ZONA DEL JUEGO */
+#puzzleCanvas {
+    display: block;
+    margin: 10px auto;
+    border: 2px solid #003B7C;
+    touch-action: none;
 }
 
 .controls {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 10px 0 14px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .controls button {
-  padding: 9px 16px;
-  border-radius: 10px;
-  border: none;
-  background: #ffb6c1;
-  color: #003B7C;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background .15s ease, color .15s ease, transform .15s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,.18);
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: none;
+    background: #ffb6c1;
+    color: #003B7C;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .controls button:hover {
-  background: #ff69b4;
-  color: #fff;
-  transform: translateY(-1px);
+    background: #ff69b4;
+    color: #fff;
 }
 
-#puzzleCanvas {
-  display: block;
-  margin: 0 auto;
-  border: 2px solid #003B7C;
-  touch-action: none; /* Pointer Events sin zoom/scroll */
-  max-width: min(92vw, 92vh);
-  max-height: min(92vw, 92vh);
-  background: #fff;
-}
-
-#mensaje {
-  text-align: center;
-  font-size: 1.05rem;
-  margin-top: 10px;
-  min-height: 1.4em;
-  color: #1a6a2e;
-  font-weight: 700;
-}
