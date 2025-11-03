@@ -1,44 +1,39 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rompecabezas del Amor ❤️</title>
-<link rel="stylesheet" href="respaldo/style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuestro Amor en Piezas</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="pantalla-inicio">
-    <h1>💖 Nuestro Amor 💖</h1>
-    <p>Selecciona la dificultad y comienza tu regalo</p>
+    <!-- 🔹 Pantalla inicial con video -->
+    <div id="pantalla-inicio">
+        <video id="video-portada" autoplay muted loop playsinline>
+            <source src="Portada.mp4" type="video/mp4">
+        </video>
 
-    <select id="dificultad">
-        <option value="3">Fácil (3x3)</option>
-        <option value="4">Medio (4x4)</option>
-        <option value="5">Difícil (5x5)</option>
-    </select>
-
-    <button id="btnIniciar">Comenzar</button>
-</div>
-
-<div id="contenedor" class="oculto">
-    <canvas id="puzzleCanvas" width="500" height="500"></canvas>
-    <div class="controls">
-        <button id="btnMezclar">Mezclar</button>
-        <button id="btnSiguiente">Siguiente imagen</button>
+        <div id="menu-inicio">
+            <h1 class="titulo-portada">Nuestro Amor en Piezas</h1>
+            <button class="btn-romantico" onclick="empezarJuego()">Comenzar</button>
+        </div>
     </div>
-    <div id="mensaje"></div>
-</div>
 
-<!-- Música -->
-<audio id="musica" src="respaldo/mix-romantico-1h.mp3" preload="auto"></audio>
+    <!-- 🔹 Pantalla del puzzle -->
+    <div id="pantalla-juego" class="oculto">
+        <canvas id="puzzle"></canvas>
 
-<script src="respaldo/script.js"></script>
-</body>
-</html>
+        <div id="controles">
+            <button class="btn-romantico" onclick="mezclarPiezas()">Mezclar</button>
+            <button class="btn-romantico" onclick="nuevaImagen()">Otra Imagen</button>
+        </div>
+    </div>
 
+    <audio id="musica" src="musica/romantico.mp3" preload="auto"></audio>
 
-<script src="V1/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
 
