@@ -1,49 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuestro Amor en Piezas</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuestro amor entre piezas ❤️</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- ✅ Música de fondo -->
-    <audio id="bgm" src="musica/romantico.mp3" autoplay loop></audio>
+<!-- MENU PRINCIPAL CON VIDEO -->
+<div id="menu">
+    <video id="videoPortada" autoplay muted loop playsinline>
+        <source src="Portada.mp4" type="video/mp4">
+        Tu navegador no soporta videos HTML5
+    </video>
 
-    <!-- ✅ Pantalla de inicio -->
-    <div id="inicio" class="pantalla">
-
-        <!-- ✅ Video como fondo -->
-        <video id="videoFondo" autoplay loop muted playsinline>
-            <source src="Portada.mp4" type="video/mp4">
-        </video>
-
-        <!-- ✅ Contenedor central de botones -->
-        <div class="menu-centro">
-            <h1 class="titulo">Nuestro Amor en Piezas</h1>
-
-            <button class="btn" onclick="cambiarNivel(3)">Nivel Fácil (3x3)</button>
-            <button class="btn" onclick="cambiarNivel(4)">Nivel Medio (4x4)</button>
-            <button class="btn" onclick="cambiarNivel(5)">Nivel Difícil (5x5)</button>
-
-            <button class="btn principal" onclick="comenzar()">Comenzar</button>
-        </div>
+    <div id="menu-overlay">
+        <h1>Nuestro amor entre piezas ❤️</h1>
+        <select id="dificultad">
+            <option value="3">Fácil (3x3)</option>
+            <option value="4">Medio (4x4)</option>
+            <option value="5">Difícil (5x5)</option>
+        </select>
+        <button onclick="iniciarJuego()">Comenzar</button>
     </div>
+</div>
 
-    <!-- ✅ Pantalla del rompecabezas -->
-    <div id="juego" class="pantalla oculto">
-        <div class="zona-juego">
-            <canvas id="tablero"></canvas>
-
-            <div class="botonera">
-                <button class="btn" onclick="barajar()">Mezclar</button>
-                <button class="btn" onclick="nuevaImagen()">Otra Imagen</button>
-                <button class="btn" onclick="volverInicio()">Volver</button>
-            </div>
-        </div>
+<!-- ZONA DEL JUEGO -->
+<div id="juego" style="display:none;">
+    <h2 id="tituloImagen"></h2>
+    <canvas id="puzzleCanvas"></canvas>
+    <div class="controls">
+        <button onclick="mezclarPiezas()">Mezclar</button>
+        <button onclick="siguienteImagen()">Siguiente imagen</button>
     </div>
+    <p id="mensaje"></p>
+</div>
 
 <script src="script.js"></script>
 </body>
 </html>
+
