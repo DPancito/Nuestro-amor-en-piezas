@@ -3,7 +3,7 @@
 html, body { height: 100%; }
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   color: #003B7C;
   background: #fff;
   overflow-x: hidden;
@@ -24,7 +24,7 @@ body {
   height: 100%;
   object-fit: cover;
   z-index: 1;
-  /* Clave: que el video NO capture clics, para que los botones funcionen en PC */
+  /* Clave: el video NO captura clics; así los botones funcionan en PC */
   pointer-events: none;
 }
 
@@ -45,7 +45,7 @@ body {
   border-radius: 16px;
   backdrop-filter: blur(6px);
   background: rgba(255, 182, 193, 0.22);
-  /* Clave: el overlay SÍ recibe eventos */
+  /* El overlay SÍ recibe eventos */
   pointer-events: auto;
 }
 
@@ -163,4 +163,3 @@ body {
   color: #1a6a2e;
   font-weight: 700;
 }
-``
