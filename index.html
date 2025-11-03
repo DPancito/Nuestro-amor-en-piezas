@@ -1,53 +1,42 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <title>Nuestro amor entre piezas ❤️</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Rompecabezas con collage y música de fondo.">
-  <link rel="pregstatic.com
-  style.css
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuestro amor entre piezas ❤️</title>
+<link rel="stylesheet" href="V1/style.css">
 </head>
 <body>
-  <!-- MENÚ PRINCIPAL CON VIDEO DE FONDO -->
-  <section id="menu" aria-label="Menú principal">
+
+<!-- VIDEO DE PORTADA -->
+<div id="menu">
     <video id="videoPortada" autoplay muted loop playsinline>
-      <source src="media/portada.mpvegador no soporta videos HTML5
+        <source src="Portada.mp4" type="video/mp4">
+        Tu navegador no soporta videos HTML5
     </video>
 
-    <div id="menu-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo">
-      <h1 id="titulo">Nuestro amor entre piezas ❤️</h1>
-
-      <label for="dificultad">Dificultad</label>
-      <select id="dificultad" aria-label="Seleccionar dificultad">
-        <option value="3">Fácil (3x3)</option>
-        <option value="4">Medio (4x4)</option>
-        <option value="5">Difícil (5x5)</option>
-      </select>
-
-      <button id="btnComenzar" type="button">Comenzar</button>
-
-      <p class="hint">
-        Si no ves el collage o no se carga el puzzle, confirma que <code>images.json</code> y la carpeta <code>/images/</code> estén en la raíz del sitio.
-      </p>
-
-      <!-- Collage decorativo (no interactivo) -->
-      <div id="collage" aria-hidden="true"></div>
+    <div id="menu-overlay">
+        <h1>Nuestro amor entre piezas ❤️</h1>
+        <select id="dificultad">
+            <option value="3">Fácil (3x3)</option>
+            <option value="4">Medio (4x4)</option>
+            <option value="5">Difícil (5x5)</option>
+        </select>
+        <button onclick="iniciarJuego()">Comenzar</button>
     </div>
-  </section>
+</div>
 
-  <!-- ZONA DE JUEGO -->
-  <section id="juego" hidden aria-label="Zona de juego">
+<!-- ZONA DEL JUEGO -->
+<div id="juego" style="display:none;">
+    <h2 id="tituloImagen"></h2>
+    <canvas id="puzzleCanvas"></canvas>
     <div class="controls">
-      <button id="btnMezclar" type="button">Mezclar</button>
-      <button id="btnSiguiente" type="button">Siguiente imagen</button>
+        <button onclick="mezclarPiezas()">Mezclar</button>
+        <button onclick="siguienteImagen()">Siguiente imagen</button>
     </div>
+    <p id="mensaje"></p>
+</div>
 
-    <canvas id="puzzleCanvas" width="600" height="600" aria-label="Rompecabezas"></canvas>
-    <p id="mensaje" role="status" aria-live="polite"></p>
-  </section>
-
-  <!-- Audio de fondo: se activa tras la primera interacción (también en el menú) -->
-  <audio id="musica" src="audio/musica.mp3" preload="auto"pt>Esta aplicación requiere JavaScript para funcionar.</noscript>
+<script src="V1/script.js"></script>
 </body>
 </html>
