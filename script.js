@@ -1,10 +1,11 @@
+<script>
 let imagenes = [];
 let indiceActual = 0;
 let filas = 3;
 let columnas = 3;
 let canvas, ctx;
 let piezas = [];
-let piezaVacia;
+let piezaVacia = {x: null, y: null};
 let imgActual = new Image();
 
 // --- CARGAR IMÁGENES ---
@@ -53,34 +54,34 @@ function mostrarImagen(indice = null) {
 
         for (let i = 0; i < filas; i++) {
             for (let j = 0; j < columnas; j++) {
-                const esVacia = (i === filas - 1 && j === columnas - 1);
                 piezas.push({
                     sx: j * (imgActual.width / columnas),
                     sy: i * (imgActual.height / filas),
                     sw: imgActual.width / columnas,
                     sh: imgActual.height / filas,
                     x: j,
-                    y: i,
-                    empty: esVacia
+                    y: i
                 });
-                if (esVacia) piezaVacia = {x:j, y:i};
             }
         }
-        dibujarPiezas();
+        piezaVacia.x = columnas - 1;
+        piezaVacia.y = filas - 1;
+
+        dibujarPiezas(false); // Mostrar imagen completa sin hueco
     }
 }
 
 // --- DIBUJAR PIEZAS ---
-function dibujarPiezas() {
+function dibujarPiezas(mostrarVacio = true) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const ancho = canvas.width / columnas;
     const alto = canvas.height / filas;
     piezas.forEach(p => {
-        if(!p.empty){
-            ctx.drawImage(imgActual, p.sx, p.sy, p.sw, p.sh, p.x*ancho, p.y*alto, ancho, alto);
-        } else {
+        if(mostrarVacio && p.x === piezaVacia.x && p.y === piezaVacia.y){
             ctx.fillStyle = "#000";
             ctx.fillRect(p.x*ancho, p.y*alto, ancho, alto);
+        } else {
+            ctx.drawImage(imgActual, p.sx, p.sy, p.sw, p.sh, p.x*ancho, p.y*alto, ancho, alto);
         }
     });
 }
@@ -98,7 +99,7 @@ function iniciarJuego() {
     audio.volume = 0;
     audio.play().then(() => fadeIn(audio)).catch(() => console.log("Interacción necesaria para música"));
 
-    mostrarImagen(); // imagen completa sin mezclar
+    mostrarImagen(); // imagen completa sin hueco
 }
 
 // --- FADE-IN ---
@@ -116,7 +117,7 @@ function mezclarPiezas(){
         const mover = adyacentes[Math.floor(Math.random()*adyacentes.length)];
         moverPieza(mover,false);
     }
-    dibujarPiezas();
+    dibujarPiezas(true); // Ahora sí mostrar hueco
 }
 
 // --- PIEZA ADYACENTE ---
@@ -135,7 +136,7 @@ function moverPieza(pieza, redraw=true){
         pieza.y = piezaVacia.y;
         piezaVacia.x = tempX;
         piezaVacia.y = tempY;
-        if(redraw) dibujarPiezas();
+        if(redraw) dibujarPiezas(true);
     }
 }
 
@@ -150,7 +151,7 @@ function manejarClick(e){
     const yPieza = Math.floor(yClick / alto);
 
     const pieza = piezas.find(p=>p.x===xPieza && p.y===yPieza);
-    if(pieza && !pieza.empty){
+    if(pieza && !(pieza.x===piezaVacia.x && pieza.y===piezaVacia.y)){
         moverPieza(pieza);
         verificarPuzzleCompleto();
     }
@@ -172,8 +173,8 @@ function siguienteImagen(){
 }
 
 // --- EVENTOS ---
-window.addEventListener('resize',()=>{ if(document.getElementById("juego").style.display==="block") dibujarPiezas(); });
+window.addEventListener('resize',()=>{ if(document.getElementById("juego").style.display==="block") dibujarPiezas(true); });
 canvas = document.getElementById("puzzleCanvas");
 canvas.addEventListener('click', manejarClick);
 canvas.addEventListener('touchstart', e=>{ e.preventDefault(); manejarClick(e); });
-
+</script>
