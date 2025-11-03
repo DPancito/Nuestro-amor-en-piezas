@@ -1,96 +1,139 @@
+/* Reset y cuerpo */
 body {
     margin: 0;
-    background: #000;
-    font-family: 'Arial', sans-serif;
-    color: white;
-    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background-color: #1c1c1c; /* negro de fondo general */
+    overflow-x: hidden;
 }
 
-/* 📌 Pantallas */
-.pantalla {
-    position: absolute;
+/* MENU PRINCIPAL CON VIDEO */
+#menu {
+    position: relative;
     width: 100vw;
     height: 100vh;
-    top: 0; left: 0;
+    background-color: #ffb6c1; /* rosa suave para espacios sobrantes */
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
-.oculto {
-    display: none !important;
-}
-
-/* 📌 Video */
-#videoFondo {
+#videoPortada {
     position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    background: black;
+    top: 50%;
+    left: 50%;
+    max-width: 100%;
+    max-height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: contain; /* ajusta al ancho/largo sin deformar */
+    background-color: #ffb6c1; /* relleno de rosa suave */
+    z-index: 1;
 }
 
-/* 📌 Menú central */
-.menu-centro {
-    position: relative;
-    z-index: 10;
-    text-align: center;
-}
-
-.titulo {
-    font-size: 32px;
-    margin-bottom: 20px;
-    color: #ff3f94;
-}
-
-/* 📌 Botones rosados */
-.btn {
-    background: #ff69b4;
-    border: none;
-    padding: 15px;
-    margin: 8px;
-    font-size: 18px;
-    border-radius: 10px;
-    color: white;
-    cursor: pointer;
-    width: 200px;
-    transition: 0.2s;
-}
-
-.btn:hover {
-    background: #ff8bc8;
-}
-
-.principal {
-    background: #ff3f94;
-}
-
-/* 📌 Juego */
-.zona-juego {
+/* SUPERPOSICIÓN DE BOTONES Y TEXTO */
+#menu-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 15px;
+    color: #fff;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    padding: 20px 30px;
+    border-radius: 15px;
+    background: rgba(255, 182, 193, 0.2);
 }
 
-canvas {
-    background: #111;
-    margin-bottom: 20px;
-    max-width: 90vw;
-    max-height: 70vh;
-    border: 3px solid #ff69b4;
+#menu-overlay h1 {
+    font-size: 2em;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    margin: 0;
+}
+
+/* SELECTOR Y BOTONES */
+#menu-overlay select,
+#menu-overlay button {
+    font-size: 16px;
+    padding: 10px 20px;
     border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
 }
 
-/* Responsivo */
-@media(max-width: 600px) {
-    .btn {
-        width: 90%;
-        font-size: 16px;
-        padding: 12px;
-    }
-
-    .titulo {
-        font-size: 24px;
-    }
+#menu-overlay select {
+    background: rgba(255, 192, 203, 0.7);
+    color: #003B7C;
 }
+
+#menu-overlay select:hover {
+    background: rgba(255, 182, 193, 0.9);
+}
+
+#menu-overlay button {
+    background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+    color: #fff;
+    font-weight: bold;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
+}
+
+#menu-overlay button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 6px 12px rgba(0,0,0,0.4);
+}
+
+/* ZONA DEL JUEGO */
+#juego {
+    width: 100vw;
+    height: 100vh;
+    background-color: #1c1c1c; /* negro */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#puzzleCanvas {
+    display: block;
+    border: 2px solid #003B7C;
+    background-color: #ffb6c1; /* rosa suave detrás de la imagen */
+    touch-action: none;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.controls button {
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: none;
+    background: #ffb6c1;
+    color: #003B7C;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.controls button:hover {
+    background: #ff69b4;
+    color: #fff;
+}
+
+/* PARA IMÁGENES DENTRO DEL JUEGO */
+img.puzzle-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* ajusta proporcionalmente */
+    background-color: #ffb6c1;
+}
+
 
