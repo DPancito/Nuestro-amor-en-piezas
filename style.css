@@ -25,11 +25,10 @@ body {
 /* 🔥 MENÚ SUPERPUESTO */
 #pantalla-inicio {
     position: fixed;
-    top: 0rem;
-    left: 0rem;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    gap: clamp(1rem, 5vw, 4rem);
     justify-content: center;
     align-items: center;
     background: rgba(0, 0, 0, 0.5);
@@ -39,7 +38,7 @@ body {
     font-size: 1.2rem; /* escalable */
     z-index: 1;
 }
-/* 🔥 JUEGO */
+/* 🔥 JUEGO 
 #pantalla-juego {
     position: fixed;
     width: 100vw;
@@ -49,7 +48,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-}
+}*/
 
 .titulo-portada {
     transition: font-size 0.3s ease, text-shadow 0.3s ease;
