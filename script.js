@@ -276,6 +276,7 @@ function reproducirMusica({ volumenObjetivo = 0.6, fadeMs = 120, paso = 0.05, ma
     audio.play()
       .then(() => {
         // fade-in suave
+        try { audio.currentTime = inicioAleatorio; } catch {}
         const iv = setInterval(() => {
           audio.volume = Math.min(audio.volume + paso, volumenObjetivo);
           if (audio.volume >= volumenObjetivo) clearInterval(iv);
