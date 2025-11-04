@@ -41,17 +41,13 @@ body {
 }
 
 .titulo-portada {
-    position: relative;
-    top: 30%; /* Ajusta este valor para mover el título hacia abajo */
-    Left: 50%;
-    transform: translateX(-50%);
     transition: font-size 0.3s ease, text-shadow 0.3s ease;
     font-size: clamp(2rem, 9vw, 6rem);
     font-weight: bold;
     color: #ff6eaa;
     text-shadow: 0 0 12px #000000;
     margin-bottom: 25px;
-    z-index: -1; /* Para que quede sobre el video */
+    z-index: 2; /* Para que quede sobre el video */
 }
 
 .btn-romantico {
