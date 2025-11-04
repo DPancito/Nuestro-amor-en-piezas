@@ -47,6 +47,7 @@ body {
     color: #ff6eaa;
     text-shadow: 0 0 12px #000000;
     margin-bottom: 25px;
+    z-index: 2; /* Para que quede sobre el video */
 }
 
 .btn-romantico {
