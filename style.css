@@ -44,6 +44,7 @@ body {
     position: relative;
     top: 30%; /* Ajusta este valor para mover el título hacia abajo */
     left: 50%;
+    transform: translateX(-50%);
     transition: font-size 0.3s ease, text-shadow 0.3s ease;
     font-size: clamp(2rem, 9vw, 6rem);
     font-weight: bold;
