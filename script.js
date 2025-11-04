@@ -256,7 +256,7 @@ function empezarJuego() {
 }
 
 // ==== AUDIO (MISMO NOMBRE) ====
-function reproducirMusica({ volumenObjetivo = 0.6, fadeMs = 120, paso = 0.012, margenFinal = 1 } = {})
+function reproducirMusica({ volumenObjetivo = 0.6, fadeMs = 300, paso = 0.012, margenFinal = 1 } = {})
 {
   const audio = document.getElementById("musica");
   if (!audio) return;
