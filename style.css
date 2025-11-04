@@ -120,8 +120,8 @@ body {
     background: #ffb7d5; /* Fondo oscuro elegante */
     display: flex;
     
-    justify-content: center;
-    align-items: flex-start; 
+    justify-content: flex-start;
+    align-items: center; 
     
     border: 3px solid #ff7ebc; /* Borde rosa más visible */
     border-radius: 12px; /* Bordes redondeados */
