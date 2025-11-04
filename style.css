@@ -114,17 +114,32 @@ body {
 }
 
 #puzzle {
-    max-width: 90vw;
-    max-height: 90vh;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
     background: #ffb7d5; /* Fondo oscuro elegante */
-    display: block;
+    display: flex;
     
-    margin: 20px auto; /* Centra el canvas horizontalmente */
+    justify-content: center;
+    align-items: center; 
     border: 3px solid #ff7ebc; /* Borde rosa más visible */
     border-radius: 12px; /* Bordes redondeados */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); /* Sombra para dar profundidad */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.7s ease, box-shadow 0.7s ease;
 }
+
+/* #puzzle {
+    max-width: 90vw;
+    max-height: 90vh;
+    background: #ffb7d5; 
+    display: block;
+    
+    margin: 20px auto; 
+    border: 3px solid #ff7ebc; 
+    border-radius: 12px; 
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+} */
 
 /* Efecto hover para dar sensación interactiva */
 #puzzle:hover {
