@@ -151,6 +151,8 @@ body {
 }
 
 #controles {
+    display: flex;
+    align-items: flex-start; 
     margin-top: clamp(8px, 2vw, 20px);
     z-index: 1;
 }
