@@ -24,10 +24,9 @@ body {
 
 /* 🔥 MENÚ SUPERPUESTO */
 #pantalla-inicio {
-    position: relative;
+    position: fixed;
     top: 0rem;
     left: 0rem;
-    z-index: 1;
     display: flex;
     flex-direction: column;
     gap: clamp(1rem, 5vw, 4rem);
@@ -38,6 +37,18 @@ body {
     border-radius: 0.75rem;
     text-align: center;
     font-size: 1.2rem; /* escalable */
+    z-index: 1;
+}
+/* 🔥 JUEGO */
+#pantalla-juego {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .titulo-portada {
