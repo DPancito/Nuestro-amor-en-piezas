@@ -43,7 +43,7 @@ body {
 .titulo-portada {
     position: relative;
     top: 30%; /* Ajusta este valor para mover el título hacia abajo */
-    Left: 10%;
+    Left: 50%;
     transform: translateX(-50%);
     transition: font-size 0.3s ease, text-shadow 0.3s ease;
     font-size: clamp(2rem, 9vw, 6rem);
@@ -51,7 +51,7 @@ body {
     color: #ff6eaa;
     text-shadow: 0 0 12px #000000;
     margin-bottom: 25px;
-    z-index: 2; /* Para que quede sobre el video */
+    z-index: 0; /* Para que quede sobre el video */
 }
 
 .btn-romantico {
