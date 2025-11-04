@@ -41,14 +41,17 @@ body {
 }
 
 .titulo-portada {
+    position: absolute;
+    left: 50%;
     top: 30%; /* Ajusta este valor para mover el título hacia abajo */
+    transform: translateX(-50%);
     transition: font-size 0.3s ease, text-shadow 0.3s ease;
     font-size: clamp(2rem, 9vw, 6rem);
     font-weight: bold;
     color: #ff6eaa;
     text-shadow: 0 0 12px #000000;
     margin-bottom: 25px;
-    z-index: 2; /* Para que quede sobre el video */
+    z-index: 3; /* Para que quede sobre el video */
 }
 
 .btn-romantico {
@@ -143,6 +146,12 @@ body {
     }
 }
 
+@media (min-width: 769px) and (max-width: 1200px) {
+    #menu-inicio {
+        font-size: 18px;
+    }
+}
+
 @media (max-width: 480px) {
     #menu-inicio {
         font-size: 14px;
@@ -150,9 +159,9 @@ body {
     }
 }
 
-@media (min-width: 769px) and (max-width: 1200px) {
-    #menu-inicio {
-        font-size: 18px;
+@media (max-width: 600px) {
+    .titulo-portada {
+        top: 38%;
     }
 }
 
@@ -161,3 +170,4 @@ body {
         font-size: 12vw;
     }
 }
+
