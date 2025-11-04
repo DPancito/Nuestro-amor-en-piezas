@@ -37,20 +37,6 @@ body {
     font-size: 10%; /* escalable */
     z-index: 1;
 }
-/* 🔥 JUEGO 
-#pantalla-juego {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: #000;
-    
-    
-    
-}*/
 
 .titulo-portada {
     transition: font-size 0.3s ease, text-shadow 0.3s ease;
@@ -117,6 +103,7 @@ body {
     height: 100vh;
     background: #000;
     display: flex;
+    
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -127,11 +114,12 @@ body {
 }
 
 #puzzle {
-    display: block;
-    margin: 20px auto; /* Centra el canvas horizontalmente */
-    background: #ffb7d5; /* Fondo oscuro elegante */
     max-width: 90vw;
     max-height: 90vh;
+    background: #ffb7d5; /* Fondo oscuro elegante */
+    display: block;
+    
+    margin: 20px auto; /* Centra el canvas horizontalmente */
     border: 3px solid #ff7ebc; /* Borde rosa más visible */
     border-radius: 12px; /* Bordes redondeados */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); /* Sombra para dar profundidad */
@@ -156,19 +144,6 @@ body {
     }
 }
 
-@media (min-width: 769px) and (max-width: 1200px) {
-    #menu-inicio {
-        font-size: 18px;
-    }
-}
-
-@media (max-width: 480px) {
-    #menu-inicio {
-        font-size: 14px;
-        padding: 10px;
-    }
-}
-
 @media (max-width: 600px) {
     .titulo-portada {
         top: 38%;
@@ -180,4 +155,3 @@ body {
         font-size: 12vw;
     }
 }
-
