@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuestro amor entre piezas ❤️</title>
+<link rel="stylesheet" href="V1/style.css">
+</head>
+<body>
+
+<!-- VIDEO DE PORTADA -->
+<div id="menu">
+    <video id="videoPortada" autoplay muted loop playsinline>
+        <source src="Portada.mp4" type="video/mp4">
+        Tu navegador no soporta videos HTML5
+    </video>
+
+    <div id="menu-overlay">
+        <h1>Nuestro amor entre piezas ❤️</h1>
+        <select id="dificultad">
+            <option value="3">Fácil (3x3)</option>
+            <option value="4">Medio (4x4)</option>
+            <option value="5">Difícil (5x5)</option>
+        </select>
+        <button onclick="iniciarJuego()">Comenzar</button>
+    </div>
+</div>
+
+<!-- ZONA DEL JUEGO -->
+<div id="juego" style="display:none;">
+    <h2 id="tituloImagen"></h2>
+    <canvas id="puzzleCanvas"></canvas>
+    <div class="controls">
+        <button onclick="mezclarPiezas()">Mezclar</button>
+        <button onclick="siguienteImagen()">Siguiente imagen</button>
+    </div>
+    <p id="mensaje"></p>
+</div>
+
+<script src="V1/script.js"></script>
+</body>
+</html>
