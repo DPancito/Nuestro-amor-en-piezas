@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,3 +44,50 @@
         <script src="script.js"></script> 
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuestro Amor en Piezas ❤️</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- 🔹 Pantalla inicial con video -->
+        <div id="pantalla-inicio">
+        <h1 class="titulo-portada">Nuestro Amor en Piezas ❤️</h1>
+        <video id="video-portada" autoplay muted loop playsinline>
+            <source src="Portada.mp4" type="video/mp4">
+            Tu navegador no soporta videos HTML5.
+        </video>
+
+    <!-- Menú de dificultad -->
+        <select id="dificultad" aria-label="Seleccionar dificultad">
+            <option value="3">Fácil (3x3)</option>
+            <option value="4" selected>Medio (4x4)</option>
+            <option value="5">Difícil (5x5)</option>
+        </select>
+
+    <!-- Botón para iniciar el juego -->
+        <button class="btn-romantico" onclick="empezarJuego()">Comenzar</button>
+        </div>
+
+    <!-- 🔹 Pantalla del puzzle -->
+        <div id="pantalla-juego" class="oculto">
+            <canvas id="puzzle"></canvas>
+
+            <div id="controles">
+                <button class="btn-romantico" onclick="mezclarPiezas()">Mezclar</button>
+                <button class="btn-romantico" onclick="nuevaImagen()">Cambiar Imagen</button>
+            </div>
+        </div>
+
+    <!-- Audio de fondo -->
+        <audio id="musica" src="audio/romantico.mp3" preload="auto" loop></audio>
+
+        <script src="script.js"></script> 
+</body>
+</html>
+>>>>>>> f6c00da683dd2e77c725ce09a81eb08d21bb783e
