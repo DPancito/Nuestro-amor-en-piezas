@@ -32,10 +32,9 @@ body {
     justify-content: center;
     align-items: center;
     background: rgba(0, 0, 0, 0.5);
-    padding: 1.25rem;
-    border-radius: 0.75rem;
+    border-radius: 7%;
     text-align: center;
-    font-size: 1.2rem; /* escalable */
+    font-size: 10%; /* escalable */
     z-index: 1;
 }
 /* 🔥 JUEGO 
@@ -43,11 +42,14 @@ body {
     position: fixed;
     width: 100vw;
     height: 100vh;
-    background: #000;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
+    background: #000;
+    
+    
+    
 }*/
 
 .titulo-portada {
