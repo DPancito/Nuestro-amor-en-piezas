@@ -152,7 +152,7 @@ body {
 
 #controles {
     display: flex;
-    align-items: flex-start; 
+    align-items: flex-end; 
     margin-top: clamp(8px, 2vw, 20px);
     z-index: 1;
 }
