@@ -107,7 +107,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    z-index: 0;
+    z-index: -1;
 }
 
 .oculto { 
@@ -117,7 +117,7 @@ body {
 #puzzle {
     position: fixed;
     width: 100vw;
-    height: 80vh;
+    height: 40vh;
     background: #ffb7d5; /* Fondo oscuro elegante */
     display: flex;
     
