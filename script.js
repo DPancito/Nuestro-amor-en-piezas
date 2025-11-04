@@ -451,7 +451,7 @@ function dibujarPuzzle(img) {
 // ==== MEZCLAR (MISMO NOMBRE, MEJORADO) ====
 function mezclarPiezas() {
   // Mezcla por movimientos válidos del hueco => siempre resoluble
-  const movimientos = 2; // proporcional al tamaño
+  const movimientos = Math.max(nivel * nivel * 30, 1); // proporcional al tamaño
   ultimaPiezaMovida = null;
   puzzleBloqueado = false;
 
