@@ -47,6 +47,7 @@ body {
     color: #ff6eaa;
     text-shadow: 0 0 12px #000000;
     margin-bottom: 25px;
+    z-index: 2; /* Para que quede sobre el video */
 }
 
 .btn-romantico {
@@ -60,6 +61,7 @@ body {
     box-shadow: 0 0 12px #ff4fa3;
     text-shadow: 0 0 12px #000000;
     margin: 10px;
+    z-index: 2;
 }
 .btn-romantico:hover {
     background: #ff4fa3;
@@ -78,6 +80,7 @@ body {
     text-shadow: 0 0 12px #000000;
     margin: 10px;
     text-align: center;
+    z-index: 2;
 }
 
 /* Efecto hover similar al botón */
@@ -141,6 +144,12 @@ body {
     }
 }
 
+@media (min-width: 769px) and (max-width: 1200px) {
+    #menu-inicio {
+        font-size: 18px;
+    }
+}
+
 @media (max-width: 480px) {
     #menu-inicio {
         font-size: 14px;
@@ -148,9 +157,9 @@ body {
     }
 }
 
-@media (min-width: 769px) and (max-width: 1200px) {
-    #menu-inicio {
-        font-size: 18px;
+@media (max-width: 600px) {
+    .titulo-portada {
+        top: 38%;
     }
 }
 
@@ -159,3 +168,4 @@ body {
         font-size: 12vw;
     }
 }
+

@@ -192,9 +192,13 @@ function getDestRectForImage(img, ladoPx) {
 }
 
 // ==== CARGAR IMÁGENES (MISMO NOMBRE) ====
+
 fetch("images.json")
   .then(r => r.json())
-  .then(data => { imagenes = data; })
+  .then(data => {
+    // Aquí ya tienes nombres completos con extensión
+    imagenes = data.map(nombre => `images/${nombre}`);
+  })
   .catch(err => {
     console.error("No se pudo cargar images.json. Revisa la ruta en GitHub Pages.", err);
     imagenes = [];
