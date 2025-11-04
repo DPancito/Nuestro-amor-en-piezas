@@ -107,6 +107,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    z-index: 0;
 }
 
 .oculto { 
@@ -127,6 +128,7 @@ body {
     border-radius: 12px; /* Bordes redondeados */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); /* Sombra para dar profundidad */
     transition: transform 3s ease, box-shadow 3s ease;
+    z-index: 1;
 }
 
 /* #puzzle {
@@ -150,6 +152,7 @@ body {
 
 #controles {
     margin-top: clamp(8px, 2vw, 20px);
+    z-index: 1;
 }
 
 /* Ajustes para pantallas pequeñas */
