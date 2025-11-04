@@ -116,12 +116,12 @@ body {
 #puzzle {
     position: fixed;
     width: 100vw;
-    height: 100vh;
+    height: 80vh;
     background: #ffb7d5; /* Fondo oscuro elegante */
     display: flex;
     
-    justify-content: flex-start;
-    align-items: center; 
+    justify-content: center;
+    align-items: flex-start; 
     
     border: 3px solid #ff7ebc; /* Borde rosa más visible */
     border-radius: 12px; /* Bordes redondeados */
