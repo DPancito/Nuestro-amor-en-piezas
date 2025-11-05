@@ -14,25 +14,6 @@ let puzzleBloqueado = true;
 let ultimaPiezaMovida = null;
 let movimientosHechos = 0;
 
-// Ajusta el canvas a la relación de aspecto de la imagen y al espacio disponible
-function configurarCanvasSegunImagen(img) {
-  const maxAncho = Math.floor(window.innerWidth * 0.9);
-  const maxAlto  = Math.floor(window.innerHeight * 0.7);
-  const ratioImg = img.width / img.height;
-
-  let anchoCanvas = maxAncho;
-  let altoCanvas  = Math.round(maxAncho / ratioImg);
-
-  if (altoCanvas > maxAlto) {
-    altoCanvas  = maxAlto;
-    anchoCanvas = Math.round(maxAlto * ratioImg);
-  }
-  
-  // Versión simple (sin DPR): canvas real = canvas visible
-  canvas.width  = anchoCanvas;
-  canvas.height = altoCanvas;
-}
-
 // Callback al ganar (puedes personalizar)
 function onWin() {
     const premios = [
@@ -137,7 +118,7 @@ function onWin() {
   { texto: "Cumplir un deseo que tú pidas (con límites sanos) 💝", nivel: "Difícil" },
   { texto: "Un “cupón” por un día donde tú mandas 🫡💗", nivel: "Difícil" }
 ];
-    
+
   // Filtra premios según el nivel actual
   let nivelTexto = nivel === 3 ? "Fácil" : nivel === 4 ? "Medio" : "Difícil";
   const premiosFiltrados = premios.filter(p => p.nivel === nivelTexto);
@@ -149,6 +130,27 @@ function onWin() {
   setTimeout(() => {
     alert(`¡Resuelto en ${movimientosHechos} movimientos!\n\n🎁 Premio ganado: ${premio.texto}`);
   }, 10);
+}
+
+// Ajusta el canvas a la relación de aspecto de la imagen y al espacio disponible
+function configurarCanvasSegunImagen(img) {
+  const maxAncho = Math.floor(window.innerWidth * 0.9);
+  const maxAlto  = Math.floor(window.innerHeight * 0.7);
+  const ratioImg = img.width / img.height;
+
+  let anchoCanvas = maxAncho;
+  let altoCanvas  = Math.round(maxAncho / ratioImg);
+
+  if (altoCanvas > maxAlto) {
+    altoCanvas  = maxAlto;
+    anchoCanvas = Math.round(maxAlto * ratioImg);
+  }
+  
+  // Versión simple (sin DPR): canvas real = canvas visible
+  canvas.width  = anchoCanvas;
+  canvas.height = altoCanvas;
+  canvas.style.width  = `${anchoCanvas}px`;
+  canvas.style.height = `${altoCanvas}px`;
 }
 
 // ==== UTILIDADES CANVAS/DPR (NUEVAS) ====
@@ -209,7 +211,7 @@ function onResize() {
   resizeTimer = setTimeout(() => {
     if (imagenActual) {
       // Mejora: redimensionar sin reiniciar el estado del puzzle
-      configurarCanvasCuadrado();
+      configurarCanvasSegunImagen(imagenActual);
       dibujarPuzzle(imagenActual);
     }
   }, 100);
@@ -256,7 +258,7 @@ function empezarJuego() {
 }
 
 // ==== AUDIO (MISMO NOMBRE) ====
-function reproducirMusica({ volumenObjetivo = 0.6, fadeMs = 300, paso = 0.012, margenFinal = 1 } = {})
+function reproducirMusica({ volumenObjetivo = 0.6, fadeMs = 120, paso = 0.05, margenFinal = 1 } = {})
 {
   const audio = document.getElementById("musica");
   if (!audio) return;
@@ -378,37 +380,32 @@ function prepararPuzzle(img) {
 
 // ==== DIBUJAR (MISMO NOMBRE, MEJORADO SIN DEFORMAR) ====
 function dibujarPuzzle2(img) {
+  const dw = canvas.width / nivel;   // ancho de cada pieza
+  const dh = canvas.height / nivel;  // alto de cada pieza
 
-  // fondo existente
-  ctx.fillStyle = "#000000ff"; // fondo rosa suave donde no hay imagen
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  const ladoPx = canvas.width; // cuadrado
-  const { dx: destX, dy: destY, dw: destW, dh: destH } = getDestRectForImage(img, ladoPx);
-  const dw = destW / nivel;
-  const dh = destH / nivel;
-
-  ctx.lineWidth = Math.max(1, Math.floor(ladoPx / 400));
+  ctx.lineWidth = Math.max(1, Math.floor(canvas.width / 400));
   ctx.strokeStyle = "#b47891ff";
 
   piezas.forEach(p => {
-    const dx = Math.round(destX + p.col * dw);
-    const dy = Math.round(destY + p.fila * dh);
+    const dx = Math.round(p.col * dw);
+    const dy = Math.round(p.fila * dh);
     const dW = Math.ceil(dw);
     const dH = Math.ceil(dh);
 
     if (!p.vacia) {
-        const sx = Math.round(p.col0 * (img.width  / nivel));
-        const sy = Math.round(p.fila0 * (img.height / nivel));
-        const sW = Math.round(img.width  / nivel);
-        const sH = Math.round(img.height / nivel);
-        ctx.drawImage(img, sx, sy, sW, sH, dx, dy, dW, dH);
+      const sx = Math.round(p.col0 * (img.width / nivel));
+      const sy = Math.round(p.fila0 * (img.height / nivel));
+      const sW = Math.round(img.width / nivel);
+      const sH = Math.round(img.height / nivel);
+
+      ctx.drawImage(img, sx, sy, sW, sH, dx, dy, dW, dH);
     } else {
-        const sx = Math.round(p.col0 * (img.width  / nivel));
-        const sy = Math.round(p.fila0 * (img.height / nivel));
-        const sW = Math.round(img.width  / nivel);
-        const sH = Math.round(img.height / nivel);
-        ctx.drawImage(img, sx, sy, sW, sH, dx, dy, dW, dH);
+      const sx = Math.round(p.col0 * (img.width / nivel));
+      const sy = Math.round(p.fila0 * (img.height / nivel));
+      const sW = Math.round(img.width / nivel);
+      const sH = Math.round(img.height / nivel);
+
+      ctx.drawImage(img, sx, sy, sW, sH, dx, dy, dW, dH);
     } 
 
     // guía opcional
@@ -417,38 +414,30 @@ function dibujarPuzzle2(img) {
 }
 
 function dibujarPuzzle(img) {
+  const dw = canvas.width / nivel;   // ancho de cada pieza
+  const dh = canvas.height / nivel;  // alto de cada pieza
 
-  // fondo existente
-  ctx.fillStyle = "#000000ff"; // fondo rosa suave donde no hay imagen
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  const ladoPx = canvas.width; // cuadrado
-  const { dx: destX, dy: destY, dw: destW, dh: destH } = getDestRectForImage(img, ladoPx);
-  const dw = destW / nivel;
-  const dh = destH / nivel;
-
-  ctx.lineWidth = Math.max(1, Math.floor(ladoPx / 400));
+  ctx.lineWidth = Math.max(1, Math.floor(canvas.width / 400));
   ctx.strokeStyle = "#b47891ff";
 
   piezas.forEach(p => {
-    const dx = Math.round(destX + p.col * dw);
-    const dy = Math.round(destY + p.fila * dh);
+    const dx = Math.round(p.col * dw);
+    const dy = Math.round(p.fila * dh);
     const dW = Math.ceil(dw);
     const dH = Math.ceil(dh);
 
     if (!p.vacia) {
-        const sx = Math.round(p.col0 * (img.width  / nivel));
-        const sy = Math.round(p.fila0 * (img.height / nivel));
-        const sW = Math.round(img.width  / nivel);
-        const sH = Math.round(img.height / nivel);
-        ctx.drawImage(img, sx, sy, sW, sH, dx, dy, dW, dH);
+      const sx = Math.round(p.col0 * (img.width / nivel));
+      const sy = Math.round(p.fila0 * (img.height / nivel));
+      const sW = Math.round(img.width / nivel);
+      const sH = Math.round(img.height / nivel);
+
+      ctx.drawImage(img, sx, sy, sW, sH, dx, dy, dW, dH);
     } else {
-      // pieza vacía = negro
       ctx.fillStyle = "#ffb7d5";
       ctx.fillRect(dx, dy, dW, dH);
     }
 
-    // guía opcional
     ctx.strokeRect(dx + 0.5, dy + 0.5, dW - 1, dH - 1);
   });
 }
@@ -581,6 +570,11 @@ function moverSiPosible(e) {
     (pieza.col === vacia.col && Math.abs(pieza.fila - vacia.fila) === 1);
 
   if (!cerca) return false;
+
+  const ok = intercambiar(pieza, { esMezcla: false });
+  if (ok) dibujarPuzzle(imagenActual);
+  return ok;
+}
 
   const ok = intercambiar(pieza, { esMezcla: false });
   if (ok) dibujarPuzzle(imagenActual);
