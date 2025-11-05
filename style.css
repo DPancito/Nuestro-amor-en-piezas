@@ -141,6 +141,7 @@ body {
     position: fixed;
     width: 100vw;
     height: 80vh;
+    max-height: 80vh;
     display:flex;
     justify-content: center;
     align-items: flex-end ; 
