@@ -140,7 +140,7 @@ body {
 #controles {
     position: fixed;
     width: 100vw;
-    height: 95vh;
+    height: 80vh;
     display:flex;
     justify-content: center;
     align-items: flex-end ; 
