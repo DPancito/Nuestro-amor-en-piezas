@@ -576,7 +576,3 @@ function moverSiPosible(e) {
   return ok;
 }
 
-  const ok = intercambiar(pieza, { esMezcla: false });
-  if (ok) dibujarPuzzle(imagenActual);
-  return ok;
-}
