@@ -116,9 +116,9 @@ body {
 #puzzle {
     position: fixed;
     width: 100vw;
-    height: 95vh;
+    height: 100vh;
     max-width: 100vw;
-    max-height: 95vh;
+    max-height: 100vh;
     background: #ffb7d5; /* Fondo oscuro elegante */
     display: flex;
     justify-content: center;
@@ -140,8 +140,8 @@ body {
 #controles {
     position: fixed;
     width: 100vw;
-    height: 80vh;
-    max-height: 80vh;
+    height: 85vh;
+    max-height: 85vh;
     display:flex;
     justify-content: center;
     align-items: flex-end ; 
